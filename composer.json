@@ -1,0 +1,62 @@
+{
+  "name": "tenside/core-bundle",
+  "description": "Tenside is a wrapper around composer that helps you manage composer projects, either from CLI or browser.",
+  "keywords": ["package", "dependency", "autoload"],
+  "homepage": "https://github.com/tenside/",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Christian Schiffler",
+      "email": "c.schiffler@cyberspectrum.de",
+      "homepage": "https://www.cyberspectrum.de"
+    }
+  ],
+  "support": {
+    "irc": "irc://irc.freenode.org/tenside",
+    "issues": "https://github.com/tenside/core-bundle/issues"
+  },
+  "require": {
+    "php": ">=5.5",
+    "ext-zip": "*",
+    "ext-openssl": "*",
+    "firebase/php-jwt": "~2.2",
+    "monolog/monolog": "~1.17",
+    "symfony/config": "~2.8",
+    "symfony/console": "~2.8",
+    "symfony/dependency-injection": "~2.8",
+    "symfony/framework-bundle": "~2.8",
+    "symfony/finder": "~2.8",
+    "symfony/http-foundation": "~2.8",
+    "symfony/http-kernel": "~2.8",
+    "symfony/process": "~2.8",
+    "symfony/security-core": "~2.8",
+    "symfony/security-http": "~2.8",
+    "symfony/routing": "~2.8",
+    "symfony/yaml": "~2.8",
+    "tenside/core": "~1.0"
+  },
+  "require-dev": {
+    "phpcq/all-tasks": "~1.1",
+    "nelmio/api-doc-bundle": "~2.10"
+  },
+  "suggest": {
+    "nelmio/api-doc-bundle": "To benefit from the API documentation annotation"
+  },
+  "autoload": {
+    "psr-4": {
+      "Tenside\\CoreBundle\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tenside\\CoreBundle\\Test\\": "tests"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0-dev"
+    }
+  },
+  "minimum-stability": "dev"
+}
