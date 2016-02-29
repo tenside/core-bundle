@@ -20,7 +20,7 @@
 
 namespace Tenside\CoreBundle\Command;
 
-use Composer\Command\Command;
+use Composer\Command\BaseCommand;
 use Composer\Downloader\FilesystemException;
 use Composer\Factory;
 use Composer\Util\Filesystem;
@@ -41,7 +41,7 @@ use Tenside\Core\Tenside;
  *
  * @see Composer\Command\SelfUpdateCommand
  */
-class SelfUpdateCommand extends Command implements ContainerAwareInterface
+class SelfUpdateCommand extends BaseCommand implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
