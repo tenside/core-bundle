@@ -31,7 +31,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Tenside\Core\Composer\PackageConverter;
-use Tenside\Core\Composer\SolverRunner;
 use Tenside\Core\Util\JsonArray;
 
 /**
@@ -50,12 +49,7 @@ class PackageController extends AbstractController
     {
         $composer  = $this->getComposer();
         $converter = new PackageConverter($composer->getPackage());
-        if ($request->query->has('solve')) {
-            $upgrades = $this->fullSolvePass();
-        } else {
-            //$upgrades = $this->quickSolvePass();
-            $upgrades = null;
-        }
+        $upgrades  = null;
 
         $packages = $converter->convertRepositoryToArray(
             $composer->getRepositoryManager()->getLocalRepository(),
@@ -157,70 +151,5 @@ class PackageController extends AbstractController
         }
 
         return $packages[0];
-    }
-
-    /**
-     * Perform a complete package version solving and return the available upgrade versions.
-     *
-     * @return JsonArray
-     */
-    private function fullSolvePass()
-    {
-        $composer  = $this->getComposer();
-        $converter = new PackageConverter($composer->getPackage());
-        $upgrades  = new JsonArray();
-        $solver    = new SolverRunner($composer);
-        $jobs      = $solver->solve();
-        foreach ($jobs as $job) {
-            if ($job instanceof UpdateOperation) {
-                $upgrades->set(
-                    $upgrades->escape($job->getInitialPackage()->getPrettyName()),
-                    $converter->convertPackageVersion($job->getTargetPackage())
-                );
-            }
-        }
-
-        return $upgrades;
-    }
-
-    /**
-     * Perform a quick resolving on the packages.
-     *
-     * @return JsonArray
-     */
-    private function quickSolvePass()
-    {
-        // FIXME: implement quick solving here.
-        $composer     = $this->getComposer();
-        $upgrades     = new JsonArray();
-        $manager      = $composer->getRepositoryManager();
-        $local        = $manager->getLocalRepository();
-        $installed    = new CompositeRepository([$local, new PlatformRepository()]);
-        $repositories = new CompositeRepository(
-            array_merge([$installed], $manager->getRepositories())
-        );
-        // FIXME: build a list of all constraints here.
-
-        /** @var PackageInterface $package */
-        foreach ($local->getPackages() as $package) {
-            /** @var PackageInterface[] $versions */
-            $versions = $repositories->findPackages($package->getName());
-            /** @var PackageInterface $latest */
-            $latest = false;
-            if (count($versions)) {
-                foreach ($versions as $version) {
-                    // FIXME: check if the constraint matches against the constraint in the list.
-                    if (!$latest || ($version->getReleaseDate() > $latest->getReleaseDate())) {
-                        $latest = $version;
-                    }
-                }
-            }
-
-            if ($latest) {
-                $upgrades->set($upgrades->escape($latest->getName()), $latest->getPrettyVersion());
-            }
-        }
-
-        return $upgrades;
     }
 }
