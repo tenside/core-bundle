@@ -22,14 +22,14 @@ services:
         public:         true
 
     tenside.tasks:
-        class:          Tenside\Task\TaskList
+        class:          Tenside\Core\Task\TaskList
         factory_class:  Tenside\CoreBundle\DependencyInjection\Factory\TaskListFactory
         factory_method: create
         arguments:      ["@tenside.home", "@tenside.taskfactory"]
         public:         true
 
     tenside.composer_json:
-        class:          Tenside\Composer\ComposerJson
+        class:          Tenside\Core\Composer\ComposerJson
         factory_class:  Tenside\CoreBundle\DependencyInjection\Factory\ComposerJsonFactory
         factory_method: create
         arguments:      ["@tenside.home"]
@@ -42,7 +42,7 @@ services:
         arguments:      ["@tenside.home"]
 
     tenside.user_provider:
-        class:     Tenside\Core\Security\UserProviderFromConfig
+        class:     Tenside\CoreBundle\Security\UserProviderFromConfig
         arguments: ["@tenside.config"]
 
     tenside.exception_renderer:
@@ -62,14 +62,14 @@ services:
             - { name: tenside.taskfactory }
 
     tenside.jwt_authenticator:
-        class:     Tenside\Core\Security\JWTAuthenticator
+        class:     Tenside\CoreBundle\Security\JWTAuthenticator
         arguments: ["@tenside.config"]
         public:    true
         # cannot be shared as the install controller is manipulating the secret.
         shared:    false
 
     tenside.permission_voter:
-        class:     Tenside\Core\Security\PermissionVoter
+        class:     Tenside\CoreBundle\Security\PermissionVoter
         arguments: ["@router", "@request_stack"]
         tags:
             - { name: security.voter }
