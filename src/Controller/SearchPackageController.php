@@ -284,11 +284,11 @@ class SearchPackageController extends AbstractController
     /**
      * Create a repository search instance.
      *
-     * @param string    $keywords The search keywords.
+     * @param string   $keywords The search keywords.
      *
-     * @param string    $type     The desired search type.
+     * @param string   $type     The desired search type.
      *
-     * @param Composer  $composer The composer instance.
+     * @param Composer $composer The composer instance.
      *
      * @return CompositeSearch
      */
