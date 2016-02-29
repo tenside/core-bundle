@@ -20,11 +20,8 @@
 
 namespace Tenside\CoreBundle\Controller;
 
-use Composer\DependencyResolver\Operation\UpdateOperation;
 use Composer\Package\AliasPackage;
 use Composer\Package\PackageInterface;
-use Composer\Repository\CompositeRepository;
-use Composer\Repository\PlatformRepository;
 use Composer\Repository\RepositoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
