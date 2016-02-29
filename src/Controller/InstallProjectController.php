@@ -374,7 +374,6 @@ class InstallProjectController extends AbstractController
     {
         $this->checkUninstalled();
 
-        // FIXME: we only search the packagist API here.
         $url     = sprintf('https://packagist.org/packages/%s/%s.json', $vendor, $project);
         $rfs     = new RemoteFilesystem($this->getInputOutput());
         $results = $rfs->getContents($url, $url);
