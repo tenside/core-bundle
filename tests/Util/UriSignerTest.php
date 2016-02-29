@@ -1,12 +1,21 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
+/**
+ * This file is part of tenside/core-bundle.
  *
- * (c) Fabien Potencier <fabien@symfony.com>
+ * (c) Christian Schiffler <c.schiffler@cyberspectrum.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
+ * This project is provided in good faith and hope to be usable by anyone.
+ *
+ * @package    tenside/core-bundle
+ * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
+ * @copyright  2015 Christian Schiffler <c.schiffler@cyberspectrum.de>
+ * @license    https://github.com/tenside/core-bundle/blob/master/LICENSE MIT
+ * @link       https://github.com/tenside/core-bundle
+ * @filesource
  */
 
 namespace Tenside\CoreBunde\Tests\Util;
@@ -14,6 +23,9 @@ namespace Tenside\CoreBunde\Tests\Util;
 use Tenside\Core\Config\TensideJsonConfig;
 use Tenside\CoreBundle\Util\UriSigner;
 
+/**
+ * This tests the uri signer class to ensure it behaves exactly like its ancestor from Symfony.
+ */
 class UriSignerTest extends \PHPUnit_Framework_TestCase
 {
     /**
