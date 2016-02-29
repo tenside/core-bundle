@@ -290,9 +290,11 @@ class TaskRunnerController extends AbstractController
         }
 
         // Now spawn a runner.
-        $this->spawn($task);
-        // TODO: Should we rather release the lock prior? What about when we can not run in background?
-        $lock->release();
+        try {
+            $this->spawn($task);
+        } finally {
+            $lock->release();
+        }
 
         return JsonResponse::create(
             [
