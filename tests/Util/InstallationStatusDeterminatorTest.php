@@ -132,7 +132,7 @@ class InstallationStatusDeterminatorTest extends TestCase
         $determinator->method('isTensideConfigured')->willReturn(true);
         $determinator->method('isProjectPresent')->willReturn(true);
         $determinator->method('isProjectInstalled')->willReturn(true);
-
+        
         $this->assertTrue($determinator->isComplete());
     }
 }
