@@ -110,8 +110,7 @@ class ComposerJsonController extends AbstractController
      */
     private function checkComposerJson($content)
     {
-        // FIXME: make this configurable.
-        $tempFile = sys_get_temp_dir() . '/composer.json.tmp';
+        $tempFile = $this->get('tenside.home')->tensideDataDir() . '/composer.json.tmp';
         file_put_contents($tempFile, $content);
 
         $validator = new ConfigValidator(new BufferIO());

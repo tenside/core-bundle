@@ -55,9 +55,10 @@ class ComposerJsonControllerTest extends TestCase
      *
      * @return JsonResponse|Response
      */
-    public function handlePostData($data)
+    private function handlePostData($data)
     {
         $this->provideFixture('composer.json');
+        mkdir($this->getTempDir() . DIRECTORY_SEPARATOR .'tenside');
 
         $controller = new ComposerJsonController();
         $controller->setContainer($this->createDefaultContainer());
