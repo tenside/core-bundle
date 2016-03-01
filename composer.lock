@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "8cfbe7023d205c1becffdbcd353f0ed5ff610003"
+                "reference": "cc14bb3ba99eaf2b1ee45bf292962551b4f1436d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/8cfbe7023d205c1becffdbcd353f0ed5ff610003",
-                "reference": "8cfbe7023d205c1becffdbcd353f0ed5ff610003",
+                "url": "https://api.github.com/repos/composer/composer/zipball/cc14bb3ba99eaf2b1ee45bf292962551b4f1436d",
+                "reference": "cc14bb3ba99eaf2b1ee45bf292962551b4f1436d",
                 "shasum": ""
             },
             "require": {
@@ -80,7 +80,7 @@
                 "dependency",
                 "package"
             ],
-            "time": "2016-02-29 18:12:51"
+            "time": "2016-02-29 19:10:08"
         },
         {
             "name": "composer/semver",
@@ -488,12 +488,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/justinrainbow/json-schema.git",
-                "reference": "37810e922eed92b0d6a6abc745761c6a0b0a9cd7"
+                "reference": "5a49ebd966390d757f74b55e4731d509e38ea1eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/37810e922eed92b0d6a6abc745761c6a0b0a9cd7",
-                "reference": "37810e922eed92b0d6a6abc745761c6a0b0a9cd7",
+                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/5a49ebd966390d757f74b55e4731d509e38ea1eb",
+                "reference": "5a49ebd966390d757f74b55e4731d509e38ea1eb",
                 "shasum": ""
             },
             "require": {
@@ -546,7 +546,7 @@
                 "json",
                 "schema"
             ],
-            "time": "2016-02-17 15:37:01"
+            "time": "2016-02-29 21:23:18"
         },
         {
             "name": "monolog/monolog",
@@ -2525,12 +2525,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tenside/core.git",
-                "reference": "f3e1c8357f8921b5c36dd983bb48661326d21f75"
+                "reference": "25ba54d553e67e1f6655b1feb51ac9bea769a1f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tenside/core/zipball/f3e1c8357f8921b5c36dd983bb48661326d21f75",
-                "reference": "f3e1c8357f8921b5c36dd983bb48661326d21f75",
+                "url": "https://api.github.com/repos/tenside/core/zipball/25ba54d553e67e1f6655b1feb51ac9bea769a1f3",
+                "reference": "25ba54d553e67e1f6655b1feb51ac9bea769a1f3",
                 "shasum": ""
             },
             "require": {
@@ -2577,7 +2577,7 @@
                 "dependency",
                 "package"
             ],
-            "time": "2016-02-24 01:41:46"
+            "time": "2016-03-01 03:26:25"
         }
     ],
     "packages-dev": [
@@ -4430,12 +4430,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "be0a7044ec8f664c07f117e86633250122af6dbf"
+                "reference": "fd4cddc0663f216c4b9d9f3cd5d52bc08ab3e951"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/be0a7044ec8f664c07f117e86633250122af6dbf",
-                "reference": "be0a7044ec8f664c07f117e86633250122af6dbf",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/fd4cddc0663f216c4b9d9f3cd5d52bc08ab3e951",
+                "reference": "fd4cddc0663f216c4b9d9f3cd5d52bc08ab3e951",
                 "shasum": ""
             },
             "require": {
@@ -4499,7 +4499,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2016-02-25 21:37:34"
+            "time": "2016-02-29 23:14:08"
         },
         {
             "name": "symfony/twig-bridge",
