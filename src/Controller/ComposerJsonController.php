@@ -86,7 +86,8 @@ class ComposerJsonController extends AbstractController
      */
     public function putComposerJsonAction(Request $request)
     {
-        $errors = $this->checkComposerJson($request->getContent());
+        $content = $request->getContent();
+        $errors  = $this->checkComposerJson($content);
 
         if (!empty($errors['error'])) {
             $errors['status'] = 'ERROR';
@@ -94,7 +95,7 @@ class ComposerJsonController extends AbstractController
             $errors['status'] = 'OK';
 
             $file = $this->get('tenside.composer_json');
-            $file->load($request->getContent());
+            $file->load($content);
             $file->save();
         }
 

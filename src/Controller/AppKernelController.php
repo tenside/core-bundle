@@ -90,14 +90,15 @@ class AppKernelController extends AbstractController
      */
     public function putAppKernelAction(Request $request)
     {
-        $errors = $this->checkAppKernel($request->getContent());
+        $content = $request->getContent();
+        $errors  = $this->checkAppKernel($content);
 
         if (!empty($errors['error'])) {
             $errors['status'] = 'ERROR';
         } else {
             $errors['status'] = 'OK';
 
-            $this->saveAppKernel($request->getContent());
+            $this->saveAppKernel($content);
         }
 
         return new JsonResponse($errors);
