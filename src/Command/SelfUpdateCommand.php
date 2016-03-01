@@ -133,7 +133,7 @@ versions and if found, installs the latest.
             );
         }
         if (!is_writable($localFilename)) {
-            throw new FilesystemException('Self update failed: the "'.$localFilename.'" file could not be written');
+            throw new FilesystemException('Self update failed: "' . $localFilename . '" is not writable.');
         }
 
         if ($input->getOption('rollback')) {
