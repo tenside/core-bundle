@@ -40,6 +40,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Tenside\Core\Composer\ComposerJson;
 use Tenside\Core\Tenside;
 use Tenside\Core\Util\RuntimeHelper;
+use Tenside\CoreBundle\Command\SelfUpdateCommand;
 
 /**
  * The console application that handles the commands.
@@ -183,9 +184,10 @@ class Application extends SymfonyApplication
      */
     protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output)
     {
-        // FIXME: we should check if the command needs the composer instance.
-        if ($command instanceof \Composer\Command\Command) {
-            $command->setComposer(ComposerFactory::create($this->inputOutput));
+        if ($command instanceof \Composer\Command\BaseCommand) {
+            if (!$command instanceof SelfUpdateCommand) {
+                $command->setComposer(ComposerFactory::create($this->inputOutput));
+            }
             $command->setIO(new ConsoleIO($input, $output, $this->getHelperSet()));
         }
 
