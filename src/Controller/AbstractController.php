@@ -72,7 +72,7 @@ abstract class AbstractController extends Controller
     /**
      * Retrieve a composer instance.
      *
-     * @param IOInterface $inputOutput The input/output handler to use.
+     * @param null|IOInterface $inputOutput The input/output handler to use.
      *
      * @return Composer
      */

@@ -73,7 +73,7 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface, Authenticatio
      */
     public function getTokenForData(UserInformationInterface $userData, $lifetime = 3600)
     {
-        return $this->encode($userData->values(), $lifetime);
+        return $this->encode($lifetime, $userData->values());
     }
 
     /**
@@ -83,7 +83,7 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface, Authenticatio
      *
      * @param string  $providerKey The provider key.
      *
-     * @return JavascriptWebToken
+     * @return JavascriptWebToken|null
      */
     public function createToken(Request $request, $providerKey)
     {
@@ -206,13 +206,13 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface, Authenticatio
     /**
      * Encode a token.
      *
-     * @param null|array $customPayload Any custom payload to be added to the token.
-     *
      * @param int|null   $lifetime      The lifetime in seconds this token shall be valid. Use null for no limit.
+     *
+     * @param null|array $customPayload Any custom payload to be added to the token.
      *
      * @return string
      */
-    private function encode($customPayload = null, $lifetime = 3600)
+    private function encode($lifetime, $customPayload = null)
     {
         $time    = time();
         $payload = ['iat' => $time];

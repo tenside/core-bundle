@@ -149,7 +149,7 @@ class UserInformation implements UserInformationInterface
      */
     public function getAccessLevel()
     {
-        return $this->get('acl', 0);
+        return (int) $this->get('acl', 0);
     }
 
     /**
@@ -161,7 +161,7 @@ class UserInformation implements UserInformationInterface
      */
     public function setAccessLevel($accessLevel)
     {
-        $this->set('acl', $accessLevel);
+        $this->set('acl', (int) $accessLevel);
 
         return $this;
     }

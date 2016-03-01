@@ -361,8 +361,9 @@ class TaskRunnerController extends AbstractController
     {
         // If defined, override the php-cli interpreter.
         if ($config->has('php_cli')) {
-            return $config->get('php_cli');
+            return (string) $config->get('php_cli');
         }
+
         return 'php';
     }
 
