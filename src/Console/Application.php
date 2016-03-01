@@ -172,13 +172,6 @@ class Application extends SymfonyApplication
 
         $this->inputOutput = new ConsoleIO($input, $output, $this->getHelperSet());
 
-        if (version_compare(PHP_VERSION, '5.4', '<')) {
-            $output->writeln(
-                '<warning>Tenside only officially supports PHP 5.4 and above, ' .
-                'you will most likely encounter problems running it with PHP ' . PHP_VERSION .
-                ', upgrading is strongly recommended.</warning>'
-            );
-        }
 
         $this->isUpdateNeeded($input, $output);
 
