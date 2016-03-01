@@ -466,10 +466,17 @@ versions and if found, installs the latest.
      */
     protected function determineLocalFileName()
     {
-        if (false === ($localFilename = realpath($_SERVER['argv'][0]))) {
-            $localFilename = $_SERVER['argv'][0];
+        // First: try to convert server argv 0 to a real path first (absolute path to a phar).
+        if (false !== ($localFilename = realpath($_SERVER['argv'][0]))) {
+            return $localFilename;
         }
 
-        return $localFilename;
+        // Second: try the currently running phar file now.
+        if ($localFilename = \Phar::running(false)) {
+            return $localFilename;
+        }
+
+        // Fall back to server argv 0 (retaining relative path) and hope best.
+        return $_SERVER['argv'][0];
     }
 }
