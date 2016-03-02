@@ -16,29 +16,25 @@ services:
 
     tenside.config:
         class:          Tenside\Core\Config\TensideJsonConfig
-        factory_class:  Tenside\CoreBundle\DependencyInjection\Factory\TensideJsonConfigFactory
-        factory_method: create
+        factory:        [Tenside\CoreBundle\DependencyInjection\Factory\TensideJsonConfigFactory, create]
         arguments:      ["@tenside.home"]
         public:         true
 
     tenside.tasks:
         class:          Tenside\Core\Task\TaskList
-        factory_class:  Tenside\CoreBundle\DependencyInjection\Factory\TaskListFactory
-        factory_method: create
+        factory:        [Tenside\CoreBundle\DependencyInjection\Factory\TaskListFactory, create]
         arguments:      ["@tenside.home", "@tenside.taskfactory"]
         public:         true
 
     tenside.composer_json:
         class:          Tenside\Core\Composer\ComposerJson
-        factory_class:  Tenside\CoreBundle\DependencyInjection\Factory\ComposerJsonFactory
-        factory_method: create
+        factory:        [Tenside\CoreBundle\DependencyInjection\Factory\ComposerJsonFactory, create]
         arguments:      ["@tenside.home"]
         shared:         false
 
     tenside.taskrun_lock:
         class:          Symfony\Component\Filesystem\LockHandler
-        factory_class:  Tenside\CoreBundle\DependencyInjection\Factory\TaskRunLockHandlerFactory
-        factory_method: create
+        factory:        [Tenside\CoreBundle\DependencyInjection\Factory\TaskRunLockHandlerFactory, create]
         arguments:      ["@tenside.home"]
 
     tenside.user_provider:
@@ -77,8 +73,7 @@ services:
 
     tenside.logger:
         class:          Monolog\Handler\RotatingFileHandler
-        factory_class:  Tenside\CoreBundle\DependencyInjection\Factory\LoggerFactory
-        factory_method: create
+        factory:        [Tenside\CoreBundle\DependencyInjection\Factory\LoggerFactory, create]
         arguments:     ["@kernel", "%kernel.environment%.log", 10, 'debug']
 
     tenside.apidoc_parser:
