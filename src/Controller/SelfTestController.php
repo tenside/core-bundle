@@ -23,14 +23,14 @@ namespace Tenside\CoreBundle\Controller;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Tenside\CoreBundle\Annotation\ApiDescription;
-use Tenside\SelfTest\Cli\SelfTestCanSpawnProcesses;
-use Tenside\SelfTest\Cli\SelfTestCliArguments;
-use Tenside\SelfTest\Cli\SelfTestCliRuntime;
-use Tenside\SelfTest\Generic\SelfTestCalledViaHttps;
-use Tenside\SelfTest\Generic\SelfTestFileOwnerMatches;
-use Tenside\SelfTest\Php\SelfTestAllowUrlFopenEnabled;
-use Tenside\SelfTest\Php\SelfTestSuhosin;
-use Tenside\SelfTest\SelfTest;
+use Tenside\Core\SelfTest\Cli\SelfTestCanSpawnProcesses;
+use Tenside\Core\SelfTest\Cli\SelfTestCliArguments;
+use Tenside\Core\SelfTest\Cli\SelfTestCliRuntime;
+use Tenside\Core\SelfTest\Generic\SelfTestCalledViaHttps;
+use Tenside\Core\SelfTest\Generic\SelfTestFileOwnerMatches;
+use Tenside\Core\SelfTest\Php\SelfTestAllowUrlFopenEnabled;
+use Tenside\Core\SelfTest\Php\SelfTestSuhosin;
+use Tenside\Core\SelfTest\SelfTest;
 
 /**
  * This class provides the self test entry points.
