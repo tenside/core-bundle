@@ -152,3 +152,10 @@ selftest_autoconfig:
     methods:  [GET]
     options:
         required_role: ROLE_MANIPULATE_REQUIREMENTS
+
+constraint_check:
+    path:     /v1/constraint
+    defaults: { _controller: TensideCoreBundle:VersionConstraint:checkVersionConstraint }
+    methods:  [POST]
+    options:
+        required_role: ROLE_NONE
