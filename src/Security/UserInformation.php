@@ -45,6 +45,7 @@ class UserInformation implements UserInformationInterface
      * @var string[]
      */
     public static $roleMap = [
+        UserInformationInterface::ROLE_NONE                    => 'ROLE_NONE',
         UserInformationInterface::ROLE_UPGRADE                 => 'ROLE_UPGRADE',
         UserInformationInterface::ROLE_MANIPULATE_REQUIREMENTS => 'ROLE_MANIPULATE_REQUIREMENTS',
         UserInformationInterface::ROLE_EDIT_COMPOSER_JSON      => 'ROLE_EDIT_COMPOSER_JSON',

@@ -33,6 +33,11 @@ interface UserInformationInterface extends UserInterface
     const KEY_ROLES = 'acl';
 
     /**
+     * No special role (used only for access check).
+     */
+    const ROLE_NONE = 0b0;
+
+    /**
      * Perform package upgrades.
      */
     const ROLE_UPGRADE = 0b1;
