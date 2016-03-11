@@ -18,7 +18,7 @@
  * @filesource
  */
 
-namespace Tenside\Test\CoreBundle\DependencyInjection\Factory;
+namespace Tenside\CoreBundle\Test\DependencyInjection\Factory;
 
 use Symfony\Component\HttpKernel\Kernel;
 use Tenside\CoreBundle\DependencyInjection\Factory\LoggerFactory;

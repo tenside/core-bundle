@@ -18,7 +18,7 @@
  * @filesource
  */
 
-namespace Tenside\Test\CoreBundle\DependencyInjection;
+namespace Tenside\CoreBundle\Test\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Tenside\CoreBundle\DependencyInjection\TensideCoreExtension;

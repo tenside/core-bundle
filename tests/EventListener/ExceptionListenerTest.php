@@ -18,7 +18,7 @@
  * @filesource
  */
 
-namespace Tenside\Test\CoreBundle\EventListener;
+namespace Tenside\CoreBundle\Test\EventListener;
 
 use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\JsonResponse;

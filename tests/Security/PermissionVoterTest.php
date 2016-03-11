@@ -18,7 +18,7 @@
  * @filesource
  */
 
-namespace Tenside\Core\Test\Security;
+namespace Tenside\CoreBundle\Test\Security;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;

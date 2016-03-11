@@ -18,7 +18,7 @@
  * @filesource
  */
 
-namespace Tenside\Test\CoreBundle\DependencyInjection\Factory;
+namespace Tenside\CoreBundle\Test\DependencyInjection\Factory;
 
 use Symfony\Component\Filesystem\LockHandler;
 use Tenside\CoreBundle\DependencyInjection\Factory\TaskRunLockHandlerFactory;

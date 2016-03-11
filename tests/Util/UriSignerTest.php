@@ -18,7 +18,7 @@
  * @filesource
  */
 
-namespace Tenside\CoreBunde\Tests\Util;
+namespace Tenside\CoreBundle\Test\Util;
 
 use Tenside\Core\Config\TensideJsonConfig;
 use Tenside\CoreBundle\Util\UriSigner;

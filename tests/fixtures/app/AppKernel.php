@@ -18,6 +18,8 @@
  * @filesource
  */
 
+namespace Tenside\CoreBundle\Test\fixtures\app;
+
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
