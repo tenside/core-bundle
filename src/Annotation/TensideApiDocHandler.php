@@ -99,12 +99,15 @@ class TensideApiDocHandler implements HandlerInterface
             $result['dataType'] = isset($array['children']) ? 'object' : DataTypes::STRING;
         }
 
-        $result['required'] = isset($array['children']) && (bool) $array['children'];
+        $result['required'] = isset($array['required']) && (bool) $array['required'];
         $result['readonly'] = isset($array['readonly']) && (bool) $array['readonly'];
 
         if (isset($array['children'])) {
             foreach ($array['children'] as $key => $value) {
                 $result['children'][$key] = $this->convertField($value);
+                if (isset($result['children'][$key]['required'])) {
+                    $result['required'] = $result['required'] || (bool) $result['children'][$key]['required'];
+                }
             }
         }
 
