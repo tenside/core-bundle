@@ -36,6 +36,7 @@ class UserInformationTest extends \PHPUnit_Framework_TestCase
     {
         $user = new UserInformation(['acl' => UserInformation::ROLE_ALL]);
 
+        $this->assertTrue($user->hasAccessLevel(UserInformation::ROLE_NONE));
         $this->assertTrue($user->hasAccessLevel(UserInformation::ROLE_ALL));
         $this->assertTrue($user->hasAccessLevel(UserInformation::ROLE_UPGRADE));
         $this->assertTrue($user->hasAccessLevel(UserInformation::ROLE_MANIPULATE_REQUIREMENTS));
@@ -43,10 +44,12 @@ class UserInformationTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($user->hasAccessLevel(UserInformation::ROLE_EDIT_APPKERNEL));
 
         $this->assertEquals(
-            ['ROLE_UPGRADE',
-             'ROLE_MANIPULATE_REQUIREMENTS',
-             'ROLE_EDIT_COMPOSER_JSON',
-             'ROLE_EDIT_APP_KERNEL',
+            [
+                'ROLE_NONE',
+                'ROLE_UPGRADE',
+                'ROLE_MANIPULATE_REQUIREMENTS',
+                'ROLE_EDIT_COMPOSER_JSON',
+                'ROLE_EDIT_APP_KERNEL',
             ],
             $user->getRoles()
         );
@@ -61,12 +64,13 @@ class UserInformationTest extends \PHPUnit_Framework_TestCase
     {
         $user = new UserInformation();
 
+        $this->assertTrue($user->hasAccessLevel(UserInformation::ROLE_NONE));
         $this->assertFalse($user->hasAccessLevel(UserInformation::ROLE_ALL));
         $this->assertFalse($user->hasAccessLevel(UserInformation::ROLE_UPGRADE));
         $this->assertFalse($user->hasAccessLevel(UserInformation::ROLE_MANIPULATE_REQUIREMENTS));
         $this->assertFalse($user->hasAccessLevel(UserInformation::ROLE_EDIT_COMPOSER_JSON));
         $this->assertFalse($user->hasAccessLevel(UserInformation::ROLE_EDIT_APPKERNEL));
-        $this->assertEquals([], $user->getRoles());
+        $this->assertEquals(['ROLE_NONE'], $user->getRoles());
     }
 
     /**
@@ -78,12 +82,13 @@ class UserInformationTest extends \PHPUnit_Framework_TestCase
     {
         $user = new UserInformation();
         $user->setAccessLevel(UserInformation::ROLE_MANIPULATE_REQUIREMENTS);
+        $this->assertTrue($user->hasAccessLevel(UserInformation::ROLE_NONE));
         $this->assertFalse($user->hasAccessLevel(UserInformation::ROLE_ALL));
         $this->assertFalse($user->hasAccessLevel(UserInformation::ROLE_UPGRADE));
         $this->assertTrue($user->hasAccessLevel(UserInformation::ROLE_MANIPULATE_REQUIREMENTS));
         $this->assertFalse($user->hasAccessLevel(UserInformation::ROLE_EDIT_COMPOSER_JSON));
         $this->assertFalse($user->hasAccessLevel(UserInformation::ROLE_EDIT_APPKERNEL));
-        $this->assertEquals(['ROLE_MANIPULATE_REQUIREMENTS'], $user->getRoles());
+        $this->assertEquals(['ROLE_NONE', 'ROLE_MANIPULATE_REQUIREMENTS'], $user->getRoles());
     }
 
     /**
