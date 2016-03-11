@@ -102,6 +102,22 @@ class TensideApiDocHandler implements HandlerInterface
         $result['required'] = isset($array['required']) && (bool) $array['required'];
         $result['readonly'] = isset($array['readonly']) && (bool) $array['readonly'];
 
+        $result = $this->convertChildren($array, $result);
+
+        return $result;
+    }
+
+    /**
+     * Convert the children key of an array.
+     *
+     * @param array $array  The source array.
+     *
+     * @param array $result The partly converted array.
+     *
+     * @return array
+     */
+    private function convertChildren($array, $result)
+    {
         if (isset($array['children'])) {
             foreach ($array['children'] as $key => $value) {
                 $result['children'][$key] = $this->convertField($value);
@@ -109,6 +125,8 @@ class TensideApiDocHandler implements HandlerInterface
                     $result['required'] = $result['required'] || (bool) $result['children'][$key]['required'];
                 }
             }
+
+            return $result;
         }
 
         return $result;
