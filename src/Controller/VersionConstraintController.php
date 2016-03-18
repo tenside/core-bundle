@@ -60,8 +60,8 @@ class VersionConstraintController extends Controller
      *   response={
      *    "status" = {
      *      "dataType" = "choice",
-     *      "description" = "ok or error",
-     *      "format" = "['ok', 'error']",
+     *      "description" = "OK or ERROR",
+     *      "format" = "['OK', 'ERROR']",
      *    },
      *    "error" = {
      *      "dataType" = "string",
@@ -77,7 +77,7 @@ class VersionConstraintController extends Controller
         } catch (\Exception $exception) {
             return new JsonResponse(
                 [
-                    'status' => 'error',
+                    'status' => 'ERROR',
                     'error'  => 'invalid payload'
                 ],
                 JsonResponse::HTTP_BAD_REQUEST
@@ -89,7 +89,7 @@ class VersionConstraintController extends Controller
         if (!$inputData->has('constraint')) {
             return new JsonResponse(
                 [
-                    'status' => 'error',
+                    'status' => 'ERROR',
                     'error'  => 'invalid payload'
                 ],
                 JsonResponse::HTTP_BAD_REQUEST
@@ -101,7 +101,7 @@ class VersionConstraintController extends Controller
         } catch (\Exception $exception) {
             return new JsonResponse(
                 [
-                    'status' => 'error',
+                    'status' => 'ERROR',
                     'error'  => $exception->getMessage()
                 ],
                 JsonResponse::HTTP_OK
@@ -110,7 +110,7 @@ class VersionConstraintController extends Controller
 
         return new JsonResponse(
             [
-                'status' => 'ok',
+                'status' => 'OK',
             ],
             JsonResponse::HTTP_OK
         );

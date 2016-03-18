@@ -41,7 +41,7 @@ class VersionConstraintControllerTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            ['status' => 'ok'],
+            ['status' => 'OK'],
             json_decode($response->getContent(), true)
         );
         $this->assertEquals(200, $response->getStatusCode());
@@ -61,7 +61,7 @@ class VersionConstraintControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             [
-                'status' => 'error',
+                'status' => 'ERROR',
                 'error'  => 'Could not parse version constraint xyz: Invalid version string "xyz"'
             ],
             json_decode($response->getContent(), true)
@@ -83,7 +83,7 @@ class VersionConstraintControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             [
-                'status' => 'error',
+                'status' => 'ERROR',
                 'error'  => 'invalid payload'
             ],
             json_decode($response->getContent(), true)
@@ -105,7 +105,7 @@ class VersionConstraintControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             [
-                'status' => 'error',
+                'status' => 'ERROR',
                 'error'  => 'invalid payload'
             ],
             json_decode($response->getContent(), true)

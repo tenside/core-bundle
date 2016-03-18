@@ -48,8 +48,8 @@ class AuthController extends AbstractController
      *   response={
      *    "status" = {
      *      "dataType" = "choice",
-     *      "description" = "ok or unauthorized",
-     *      "format" = "['ok', 'unauthorized']",
+     *      "description" = "OK or unauthorized",
+     *      "format" = "['OK', 'unauthorized']",
      *    },
      *    "token" = {
      *      "dataType" = "string",
@@ -74,7 +74,7 @@ class AuthController extends AbstractController
             $token = $this->get('tenside.jwt_authenticator')->getTokenForData($user);
             return new JsonResponse(
                 [
-                    'status' => 'ok',
+                    'status' => 'OK',
                     'token'  => $token,
                     'acl'    => $user->getRoles(),
                 ],
