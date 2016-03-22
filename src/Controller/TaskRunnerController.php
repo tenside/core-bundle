@@ -12,6 +12,7 @@
  *
  * @package    tenside/core-bundle
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
+ * @author     Yanick Witschi <yanick.witschi@terminal42.ch>
  * @copyright  2015 Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @license    https://github.com/tenside/core-bundle/blob/master/LICENSE MIT
  * @link       https://github.com/tenside/core-bundle
@@ -397,11 +398,17 @@ class TaskRunnerController extends AbstractController
      */
     private function getEnvironment(TensideJsonConfig $config)
     {
-        if (!$config->has('php_cli_environment')) {
-            return [];
+        $variables = [];
+
+        // Pass on COMPOSER env variable if set
+        if (false !== ($composerEnv = getenv('COMPOSER'))) {
+            $variables['COMPOSER'] = $composerEnv;
         }
 
-        $variables = [];
+        if (!$config->has('php_cli_environment')) {
+            return $variables;
+        }
+
         foreach ($config->get('php_cli_environment') as $name => $value) {
             $variables[$name] = escapeshellarg($value);
         }
