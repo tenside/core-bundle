@@ -211,7 +211,7 @@ class InstallProjectController extends AbstractController
 
         try {
             $this->runInstaller($taskId);
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             // Error starting the install task, roll back and output the error.
             $fileSystem = new Filesystem();
             $fileSystem->remove($installDir . DIRECTORY_SEPARATOR . 'composer.json');
@@ -227,6 +227,15 @@ class InstallProjectController extends AbstractController
                     ]
                 )
             );
+
+            $message = sprintf(
+                '%s: %s (uncaught exception) at %s line %s',
+                get_class($exception),
+                $exception->getMessage(),
+                $exception->getFile(),
+                $exception->getLine()
+            );
+            $this->get('logger')->error($message, array('exception' => $exception));
 
             return new JsonResponse(
                 [
