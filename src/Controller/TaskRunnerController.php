@@ -398,12 +398,7 @@ class TaskRunnerController extends AbstractController
      */
     private function getEnvironment(TensideJsonConfig $config)
     {
-        $variables = [];
-
-        // Pass on COMPOSER env variable if set
-        if (false !== ($composerEnv = getenv('COMPOSER'))) {
-            $variables['COMPOSER'] = $composerEnv;
-        }
+        $variables = $this->getDefinedEnvironmentVariables(['SYMFONY_ENV', 'SYMFONY_DEBUG', 'COMPOSER']);
 
         if (!$config->has('php_cli_environment')) {
             return $variables;
@@ -411,6 +406,25 @@ class TaskRunnerController extends AbstractController
 
         foreach ($config->get('php_cli_environment') as $name => $value) {
             $variables[$name] = escapeshellarg($value);
+        }
+
+        return $variables;
+    }
+
+    /**
+     * Retrieve the passed environment variables from the current session and return them.
+     *
+     * @param array $names The names of the environment variables to inherit.
+     *
+     * @return array
+     */
+    private function getDefinedEnvironmentVariables($names)
+    {
+        $variables = [];
+        foreach ($names as $name) {
+            if (false !== ($composerEnv = getenv($name))) {
+                $variables[$name] = escapeshellarg($composerEnv);
+            }
         }
 
         return $variables;
