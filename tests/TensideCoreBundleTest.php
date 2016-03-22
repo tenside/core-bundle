@@ -21,6 +21,7 @@
 namespace Tenside\CoreBundle\Test;
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Tenside\CoreBundle\TensideCoreBundle;
 
 /**
@@ -69,5 +70,23 @@ class TensideCoreBundleTest extends TestCase
 
         $this->assertTrue(AnnotationRegistry::loadAnnotationClass('Tenside\CoreBundle\Annotation\ApiDescription'));
         $this->assertTrue(class_exists('Tenside\CoreBundle\Annotation\ApiDescription', false));
+    }
+
+    /**
+     * Test that calling boot() registers our annotation in the AnnotationRegistry.
+     *
+     * @return void
+     */
+    public function testBuildAddsCompilerPass()
+    {
+        $bundle = new TensideCoreBundle();
+
+        $container = $this->getMock(ContainerBuilder::class);
+        $container
+            ->expects($this->once())
+            ->method('addCompilerPass')
+            ->willReturn($container);
+
+        $bundle->build($container);
     }
 }
