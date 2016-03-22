@@ -41,6 +41,7 @@ class AddTaskFactoryPass implements CompilerPassInterface
         $factories = [];
         foreach ($container->findTaggedServiceIds('tenside.taskfactory') as $id => $attributes) {
             $priority = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
+
             $factories[$priority][] = new Reference($id);
         }
 

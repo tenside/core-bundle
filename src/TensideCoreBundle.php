@@ -61,7 +61,13 @@ class TensideCoreBundle extends Bundle
     }
 
     /**
-     * @param ContainerBuilder $container
+     * Builds the bundle and registers the compiler pass.
+     *
+     * It is only ever called once when the cache is empty.
+     *
+     * @param ContainerBuilder $container A ContainerBuilder instance.
+     *
+     * @return void
      */
     public function build(ContainerBuilder $container)
     {
