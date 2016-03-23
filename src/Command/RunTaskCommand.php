@@ -70,7 +70,7 @@ class RunTaskCommand extends ContainerAwareCommand
             $retry  = 3;
             // Try up to 3 times to acquire with short delay in between.
             while ($retry > 0) {
-                sleep(1000);
+                usleep(1000);
                 if ($locked = $lock->lock()) {
                     break;
                 }

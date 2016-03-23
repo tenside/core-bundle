@@ -110,6 +110,10 @@ class InstallProjectController extends AbstractController
 
         if ($inputData->has('configuration/php_cli')) {
             $tensideConfig->set('php_cli', $inputData->get('configuration/php_cli'));
+        } elseif ('' !== PHP_BINARY && file_exists(PHP_BINARY)) {
+            $tensideConfig->set('php_cli', PHP_BINARY);
+        } elseif (file_exists(PHP_BINDIR . '/php')) {
+            $tensideConfig->set('php_cli', PHP_BINDIR . '/php');
         }
 
         if ($inputData->has('configuration/php_cli_arguments')) {
@@ -187,11 +191,9 @@ class InstallProjectController extends AbstractController
         }
 
         $this->checkUninstalled();
-        $result = [];
         $header = [];
 
         $installDir = $this->get('tenside.home')->homeDir();
-        $dataDir    = $this->get('tenside.home')->tensideDataDir();
         $inputData  = new JsonArray($request->getContent());
         $taskData   = new JsonArray();
 
@@ -202,49 +204,11 @@ class InstallProjectController extends AbstractController
         }
 
         $taskId             = $this->getTensideTasks()->queue('install', $taskData);
-        $result['task']     = $taskId;
         $header['Location'] = $this->generateUrl(
             'task_get',
             ['taskId' => $taskId],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-
-        try {
-            $this->runInstaller($taskId);
-        } catch (\Exception $exception) {
-            // Error starting the install task, roll back and output the error.
-            $fileSystem = new Filesystem();
-            $fileSystem->remove($installDir . DIRECTORY_SEPARATOR . 'composer.json');
-            $fileSystem->remove(
-                array_map(
-                    function ($file) use ($dataDir) {
-                        return $dataDir . DIRECTORY_SEPARATOR . $file;
-                    },
-                    [
-                        'tenside-tasks.json',
-                        'tenside-task-' . $taskId . '.json',
-                        'tenside-task-' . $taskId . '.json~'
-                    ]
-                )
-            );
-
-            $message = sprintf(
-                '%s: %s (uncaught exception) at %s line %s',
-                get_class($exception),
-                $exception->getMessage(),
-                $exception->getFile(),
-                $exception->getLine()
-            );
-            $this->get('logger')->error($message, array('exception' => $exception));
-
-            return new JsonResponse(
-                [
-                    'status'  => 'ERROR',
-                    'message' => 'The install task could not be started.'
-                ],
-                JsonResponse::HTTP_INTERNAL_SERVER_ERROR
-            );
-        }
 
         return new JsonResponse(
             [
