@@ -310,7 +310,7 @@ class TaskRunnerController extends AbstractController
         $config = $this->getTensideConfig();
         $home   = $this->get('tenside.home')->homeDir();
         $cmd    = sprintf(
-            '%s %s %s tenside:runtask %s -v',
+            '%s %s %s tenside:runtask %s --no-interaction -v',
             escapeshellcmd($this->getInterpreter($config)),
             $this->getArguments($config),
             escapeshellarg($this->get('tenside.cli_script')->cliExecutable()),
@@ -319,25 +319,24 @@ class TaskRunnerController extends AbstractController
 
         $commandline = new Process($cmd, $home, $this->getEnvironment($config), null, null);
 
-        $commandline->start();
-        if (!$commandline->isRunning()) {
-            // We might end up here when the process has been forked.
-            // If exit code is neither 0 nor null, we have a problem here.
-            if ($exitCode = $commandline->getExitCode()) {
-                /** @var LoggerInterface $logger */
-                $logger = $this->get('logger');
-                $logger->error('Failed to execute "' . $cmd . '"');
-                $logger->error('Exit code: ' . $commandline->getExitCode());
-                $logger->error('Output: ' . $commandline->getOutput());
-                $logger->error('Error output: ' . $commandline->getErrorOutput());
-                throw new \RuntimeException(
-                    sprintf(
-                        'Spawning process task %s resulted in exit code %s',
-                        $task->getId(),
-                        $exitCode
-                    )
-                );
-            }
+        $exitCode = $commandline->run();
+
+        // We might end up here when the process has been forked.
+        // If exit code is neither 0 nor null, we have a problem here.
+        if (0 !== $exitCode) {
+            /** @var LoggerInterface $logger */
+            $logger = $this->get('logger');
+            $logger->error('Failed to execute "' . $cmd . '"');
+            $logger->error('Exit code: ' . $commandline->getExitCode());
+            $logger->error('Output: ' . $commandline->getOutput());
+            $logger->error('Error output: ' . $commandline->getErrorOutput());
+            throw new \RuntimeException(
+                sprintf(
+                    'Spawning process task %s resulted in exit code %s',
+                    $task->getId(),
+                    $exitCode
+                )
+            );
         }
     }
 
