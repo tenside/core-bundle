@@ -267,12 +267,6 @@ class TaskRunnerController extends AbstractController
      */
     public function runAction()
     {
-        $lock = $this->container->get('tenside.taskrun_lock');
-
-        if (!$lock->lock()) {
-            throw new NotAcceptableHttpException('Task already running');
-        }
-
         // Fetch the next queued task.
         $task = $this->getTensideTasks()->getNext();
 
@@ -291,11 +285,7 @@ class TaskRunnerController extends AbstractController
         }
 
         // Now spawn a runner.
-        try {
-            $this->spawn($task);
-        } finally {
-            $lock->release();
-        }
+        $this->spawn($task);
 
         return JsonResponse::create(
             [
