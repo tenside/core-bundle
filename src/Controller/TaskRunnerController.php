@@ -423,7 +423,7 @@ class TaskRunnerController extends AbstractController
         $variables = [];
         foreach ($names as $name) {
             if (false !== ($composerEnv = getenv($name))) {
-                $variables[$name] = escapeshellarg($composerEnv);
+                $variables[$name] = $composerEnv;
             }
         }
 
