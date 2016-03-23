@@ -110,6 +110,10 @@ class InstallProjectController extends AbstractController
 
         if ($inputData->has('configuration/php_cli')) {
             $tensideConfig->set('php_cli', $inputData->get('configuration/php_cli'));
+        } elseif ('' !== PHP_BINARY && file_exists(PHP_BINARY)) {
+            $tensideConfig->set('php_cli', PHP_BINARY);
+        } elseif (file_exists(PHP_BINDIR . '/php')) {
+            $tensideConfig->set('php_cli', PHP_BINDIR . '/php');
         }
 
         if ($inputData->has('configuration/php_cli_arguments')) {
