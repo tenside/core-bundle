@@ -320,7 +320,7 @@ class TaskRunnerController extends AbstractController
         $config = $this->getTensideConfig();
         $home   = $this->get('tenside.home')->homeDir();
         $cmd    = sprintf(
-            '%s %s %s tenside:runtask %s -v',
+            '%s %s %s tenside:runtask %s -v --no-interaction',
             escapeshellcmd($this->getInterpreter($config)),
             $this->getArguments($config),
             escapeshellarg($this->get('tenside.cli_script')->cliExecutable()),
