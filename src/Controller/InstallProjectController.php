@@ -22,7 +22,6 @@ namespace Tenside\CoreBundle\Controller;
 
 use Composer\Util\RemoteFilesystem;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
@@ -191,7 +190,6 @@ class InstallProjectController extends AbstractController
         $header = [];
 
         $installDir = $this->get('tenside.home')->homeDir();
-        $dataDir    = $this->get('tenside.home')->tensideDataDir();
         $inputData  = new JsonArray($request->getContent());
         $taskData   = new JsonArray();
 
@@ -208,43 +206,6 @@ class InstallProjectController extends AbstractController
             ['taskId' => $taskId],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-
-        try {
-            $this->runInstaller($taskId);
-        } catch (\Exception $exception) {
-            // Error starting the install task, roll back and output the error.
-            $fileSystem = new Filesystem();
-            $fileSystem->remove($installDir . DIRECTORY_SEPARATOR . 'composer.json');
-            $fileSystem->remove(
-                array_map(
-                    function ($file) use ($dataDir) {
-                        return $dataDir . DIRECTORY_SEPARATOR . $file;
-                    },
-                    [
-                        'tenside-tasks.json',
-                        'tenside-task-' . $taskId . '.json',
-                        'tenside-task-' . $taskId . '.json~'
-                    ]
-                )
-            );
-
-            $message = sprintf(
-                '%s: %s (uncaught exception) at %s line %s',
-                get_class($exception),
-                $exception->getMessage(),
-                $exception->getFile(),
-                $exception->getLine()
-            );
-            $this->get('logger')->error($message, array('exception' => $exception));
-
-            return new JsonResponse(
-                [
-                    'status'  => 'ERROR',
-                    'message' => 'The install task could not be started.'
-                ],
-                JsonResponse::HTTP_INTERNAL_SERVER_ERROR
-            );
-        }
 
         return new JsonResponse(
             [
@@ -490,25 +451,6 @@ class InstallProjectController extends AbstractController
     {
         if ($this->get('tenside.status')->isComplete()) {
             throw new NotAcceptableHttpException('Already installed in ' . $this->get('tenside.home')->homeDir());
-        }
-    }
-
-    /**
-     * Run the given task and return a response when an error occurred or null if it worked out.
-     *
-     * @param string $taskId The task id.
-     *
-     * @return void
-     *
-     * @throws \RuntimeException When the process could not be started.
-     */
-    private function runInstaller($taskId)
-    {
-        $runnerResponse = $this->forward('TensideCoreBundle:TaskRunner:run');
-
-        $runnerStarted = json_decode($runnerResponse->getContent(), true);
-        if ($runnerStarted['status'] !== 'OK' || $runnerStarted['task'] !== $taskId) {
-            throw new \RuntimeException('Status was not ok');
         }
     }
 }

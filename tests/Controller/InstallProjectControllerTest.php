@@ -203,14 +203,9 @@ class InstallProjectControllerTest extends TestCase
 
         $controller = $this->getMock(
             InstallProjectController::class,
-            ['generateUrl', 'forward']
+            ['generateUrl']
         );
         $controller->method('generateUrl')->willReturn('http://url/to/task');
-        $controller
-            ->expects($this->once())
-            ->method('forward')
-            ->with('TensideCoreBundle:TaskRunner:run')
-            ->willReturn(new JsonResponse(['status' => 'OK', 'task' => '$taskId$']));
 
         /** @var $controller InstallProjectController */
 
