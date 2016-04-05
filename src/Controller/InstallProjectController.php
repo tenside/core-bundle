@@ -103,9 +103,14 @@ class InstallProjectController extends AbstractController
         }
         $inputData = new JsonArray($request->getContent());
 
+        $secret = bin2hex(random_bytes(40));
+        if ($inputData->has('credentials/secret')) {
+            $secret = $inputData->get('credentials/secret');
+        }
+
         // Add tenside configuration.
         $tensideConfig = $this->get('tenside.config');
-        $tensideConfig->set('secret', $inputData->get('credentials/secret'));
+        $tensideConfig->set('secret', $secret);
 
         if ($inputData->has('configuration/php_cli')) {
             $tensideConfig->set('php_cli', $inputData->get('configuration/php_cli'));
