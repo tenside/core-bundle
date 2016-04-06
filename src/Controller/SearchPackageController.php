@@ -70,6 +70,11 @@ class SearchPackageController extends AbstractController
      *      "description" = "The type of package to search (optional, default: all).",
      *      "format" = "['installed', 'contao', 'all']",
      *      "required" = false
+     *    },
+     *    "threshold" = {
+     *      "dataType" = "int",
+     *      "description" = "The amount of results after which the search shall be stopped (optional, default: 20).",
+     *      "required" = false
      *    }
      *   },
      *   response={
@@ -213,8 +218,9 @@ class SearchPackageController extends AbstractController
         $data            = new JsonArray($request->getContent());
         $keywords        = $data->get('keywords');
         $type            = $data->get('type');
+        $threshold       = $data->has('threshold') ? $data->get('threshold') : 20;
         $localRepository = $composer->getRepositoryManager()->getLocalRepository();
-        $searcher        = $this->getRepositorySearch($keywords, $type, $composer);
+        $searcher        = $this->getRepositorySearch($keywords, $type, $composer, $threshold);
         $results         = $searcher->searchAndDecorate($keywords, $this->getFilters($data));
         $responseData    = [];
         $rootPackage     = $composer->getPackage();
@@ -284,15 +290,17 @@ class SearchPackageController extends AbstractController
     /**
      * Create a repository search instance.
      *
-     * @param string   $keywords The search keywords.
+     * @param string   $keywords  The search keywords.
      *
-     * @param string   $type     The desired search type.
+     * @param string   $type      The desired search type.
      *
-     * @param Composer $composer The composer instance.
+     * @param Composer $composer  The composer instance.
+     *
+     * @param int      $threshold The threshold after which to stop searching.
      *
      * @return CompositeSearch
      */
-    private function getRepositorySearch($keywords, $type, Composer $composer)
+    private function getRepositorySearch($keywords, $type, Composer $composer, $threshold)
     {
         $repositoryManager = $composer->getRepositoryManager();
         $localRepository   = $repositoryManager->getLocalRepository();
@@ -310,6 +318,7 @@ class SearchPackageController extends AbstractController
         }
 
         $repositorySearch = new RepositorySearch($repositories);
+        $repositorySearch->setSatisfactionThreshold($threshold);
         if (false !== strpos($keywords, '/')) {
             $repositorySearch->disableSearchType(RepositoryInterface::SEARCH_FULLTEXT);
         } else {
@@ -321,6 +330,7 @@ class SearchPackageController extends AbstractController
                 $repositorySearch
             ]
         );
+        $searcher->setSatisfactionThreshold($threshold);
 
         return $searcher;
     }
