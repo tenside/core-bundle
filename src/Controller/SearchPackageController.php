@@ -305,12 +305,7 @@ class SearchPackageController extends AbstractController
         $repositoryManager = $composer->getRepositoryManager();
         $localRepository   = $repositoryManager->getLocalRepository();
 
-        $repositories = new CompositeRepository(
-            [
-                new PlatformRepository(),
-                $localRepository,
-            ]
-        );
+        $repositories = new CompositeRepository([$localRepository]);
 
         // If we do not search locally, add the other repositories now.
         if ('installed' !== $type) {
