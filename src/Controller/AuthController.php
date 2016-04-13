@@ -59,7 +59,11 @@ class AuthController extends AbstractController
      *      "actualType" = "collection",
      *      "subType" = "string",
      *      "description" = "The roles of the authenticated user.",
-     *    }
+     *    },
+     *    "username" = {
+     *      "actualType" = "string",
+     *      "description" = "The username of the authenticated user.",
+     *    },
      *   },
      * )
      */
@@ -74,9 +78,10 @@ class AuthController extends AbstractController
             $token = $this->get('tenside.jwt_authenticator')->getTokenForData($user);
             return new JsonResponse(
                 [
-                    'status' => 'OK',
-                    'token'  => $token,
-                    'acl'    => $user->getRoles(),
+                    'status'    => 'OK',
+                    'token'     => $token,
+                    'acl'       => $user->getRoles(),
+                    'username'  => $user->getUsername()
                 ],
                 JsonResponse::HTTP_OK,
                 ['Authentication' => $token]

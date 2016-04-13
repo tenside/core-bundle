@@ -98,13 +98,14 @@ class AuthControllerTest extends TestCase
      */
     public function testPostValidCredentials()
     {
-        $response = $this->handleAuth(new UserInformation(['acl' => 7]));
-
+        $response = $this->handleAuth(new UserInformation(['acl' => 7, 'username' => 'foobar']));
         $result = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('status', $result);
         $this->assertArrayHasKey('token', $result);
         $this->assertArrayHasKey('acl', $result);
+        $this->assertArrayHasKey('username', $result);
         $this->assertEquals('OK', $result['status']);
+        $this->assertEquals('foobar', $result['username']);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
