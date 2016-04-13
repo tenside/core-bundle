@@ -40,6 +40,8 @@ class InstallProjectController extends AbstractController
     /**
      * Configure tenside.
      *
+     * NOTE: This method will become inaccessible after the first successful call.
+     *
      * @param Request $request The request.
      *
      * @return JsonResponse
@@ -49,8 +51,9 @@ class InstallProjectController extends AbstractController
      * @ApiDoc(
      *   section="install",
      *   statusCodes = {
-     *     201 = "When everything worked out ok"
-     *   },
+     *     201 = "When everything worked out ok",
+     *     406 = "When the configuration is already complete"
+     *   }
      * )
      * @ApiDescription(
      *   request={
@@ -145,6 +148,8 @@ class InstallProjectController extends AbstractController
     /**
      * Create a project.
      *
+     * NOTE: This method will become inaccessible after the returned task has been run successfully.
+     *
      * @param Request $request The request.
      *
      * @return JsonResponse
@@ -154,7 +159,8 @@ class InstallProjectController extends AbstractController
      * @ApiDoc(
      *   section="install",
      *   statusCodes = {
-     *     201 = "When everything worked out ok"
+     *     201 = "When everything worked out ok",
+     *     406 = "When the installation is already been completed"
      *   },
      * )
      * @ApiDescription(
@@ -226,13 +232,18 @@ class InstallProjectController extends AbstractController
      * This is a gateway to the self test controller available only at install time.
      *
      * This is just here as the other route is protected with login.
-     * This method is inaccessible as soon as the installation is complete.
+     *
+     * NOTE: This method will become inaccessible as soon as the installation is complete.
      *
      * @return JsonResponse
      *
      * @ApiDoc(
      *   section="install",
-     *   description="Install time - self test."
+     *   description="Install time - self test.",
+     *   statusCodes = {
+     *     201 = "When everything worked out ok",
+     *     406 = "When the installation is already complete"
+     *   },
      * )
      * @ApiDescription(
      *   response={
@@ -274,13 +285,18 @@ class InstallProjectController extends AbstractController
      * Install time gateway to the auto config.
      *
      * This is just here as the other route is protected with login.
-     * This method is inaccessible as soon as the installation is complete.
+     *
+     * NOTE: This method will become inaccessible as soon as the installation is complete.
      *
      * @return JsonResponse
      *
      * @ApiDoc(
      *   section="install",
-     *   description="Install time - auto config."
+     *   description="Install time - auto config.",
+     *   statusCodes = {
+     *     201 = "When everything worked out ok",
+     *     406 = "When the installation is already complete"
+     *   },
      * )
      * @ApiDescription(
      *   response={
@@ -305,6 +321,8 @@ class InstallProjectController extends AbstractController
     /**
      * Retrieve the available versions of a package.
      *
+     * NOTE: This method will become inaccessible as soon as the installation is complete.
+     *
      * @param string $vendor  The vendor name of the package.
      *
      * @param string $project The name of the package.
@@ -314,8 +332,9 @@ class InstallProjectController extends AbstractController
      * @ApiDoc(
      *   section="install",
      *   statusCodes = {
-     *     200 = "When everything worked out ok"
-     *   }
+     *     201 = "When everything worked out ok",
+     *     406 = "When the installation is already complete"
+     *   },
      * )
      * @ApiDescription(
      *   response={
@@ -395,10 +414,10 @@ class InstallProjectController extends AbstractController
      * @ApiDoc(
      *   section="install",
      *   description="This method provides information about the installation.",
-     *   authentication=false,
      *   statusCodes = {
-     *     200 = "When everything worked out ok"
-     *   }
+     *     201 = "When everything worked out ok",
+     *     406 = "When the installation is already complete"
+     *   },
      * )
      * @ApiDescription(
      *   response={

@@ -44,6 +44,9 @@ class SelfTestController extends AbstractController
      *
      * @ApiDoc(
      *   section="selftest",
+     *   statusCodes = {
+     *     200 = "When everything worked out ok"
+     *   },
      *   authentication = true,
      *   authenticationRoles = {
      *     "ROLE_MANIPULATE_REQUIREMENTS"
@@ -104,6 +107,9 @@ class SelfTestController extends AbstractController
      *
      * @ApiDoc(
      *   section="selftest",
+     *   statusCodes = {
+     *     200 = "When everything worked out ok"
+     *   },
      *   authentication = true,
      *   authenticationRoles = {
      *     "ROLE_MANIPULATE_REQUIREMENTS"
