@@ -105,6 +105,13 @@ class TaskRunnerController extends AbstractController
      *   authenticationRoles = {
      *     "ROLE_MANIPULATE_REQUIREMENTS"
      *   },
+     *   filters = {
+     *     {
+     *       "name"="offset",
+     *       "dataType" = "int",
+     *       "description"="If present, the output will be returned from the given byte offset."
+     *     }
+     *   }
      * )
      * @ApiDescription(
      *   response={
