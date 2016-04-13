@@ -9,3 +9,5 @@ Tenside core-bundle
 ===================
 
 This provides the symfony bundle to glue the [tenside/core][1] into a symfony application.
+
+[1]: https://github.com/tenside/core
