@@ -104,6 +104,10 @@ class TaskRunnerController extends AbstractController
      *       "dataType" = "string",
      *       "description" = "The task status."
      *     },
+     *     "type" = {
+     *       "dataType" = "string",
+     *       "description" = "The task type."
+     *     },
      *     "output" = {
      *       "dataType" = "string",
      *       "description" = "The command line output of the task."
@@ -128,6 +132,7 @@ class TaskRunnerController extends AbstractController
         return JsonResponse::create(
             [
                 'status' => $task->getStatus(),
+                'type'   => $task->getType(),
                 'output' => $task->getOutput($offset)
             ]
         );
