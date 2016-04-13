@@ -48,6 +48,10 @@ class TaskRunnerController extends AbstractController
      *   statusCodes = {
      *     200 = "When everything worked out ok"
      *   },
+     *   authentication = true,
+     *   authenticationRoles = {
+     *     "ROLE_MANIPULATE_REQUIREMENTS"
+     *   },
      * )
      * @ApiDescription(
      *   response={
@@ -96,6 +100,10 @@ class TaskRunnerController extends AbstractController
      *   section="tasks",
      *   statusCodes = {
      *     200 = "When everything worked out ok"
+     *   },
+     *   authentication = true,
+     *   authenticationRoles = {
+     *     "ROLE_MANIPULATE_REQUIREMENTS"
      *   },
      * )
      * @ApiDescription(
@@ -151,6 +159,10 @@ class TaskRunnerController extends AbstractController
      *   section="tasks",
      *   statusCodes = {
      *     201 = "When everything worked out ok"
+     *   },
+     *   authentication = true,
+     *   authenticationRoles = {
+     *     "ROLE_MANIPULATE_REQUIREMENTS"
      *   },
      * )
      * @ApiDescription(
@@ -208,6 +220,10 @@ class TaskRunnerController extends AbstractController
      *   statusCodes = {
      *     200 = "When everything worked out ok"
      *   },
+     *   authentication = true,
+     *   authenticationRoles = {
+     *     "ROLE_MANIPULATE_REQUIREMENTS"
+     *   },
      * )
      * @ApiDescription(
      *   response={
@@ -255,6 +271,10 @@ class TaskRunnerController extends AbstractController
      *     200 = "When everything worked out ok",
      *     404 = "When no pending task has been found",
      *     406 = "When another task is still running"
+     *   },
+     *   authentication = true,
+     *   authenticationRoles = {
+     *     "ROLE_MANIPULATE_REQUIREMENTS"
      *   },
      * )
      * @ApiDescription(

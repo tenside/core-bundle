@@ -43,7 +43,11 @@ class SelfTestController extends AbstractController
      * @return JsonResponse
      *
      * @ApiDoc(
-     *   section="selftest"
+     *   section="selftest",
+     *   authentication = true,
+     *   authenticationRoles = {
+     *     "ROLE_MANIPULATE_REQUIREMENTS"
+     *   }
      * )
      * @ApiDescription(
      *   response={
@@ -99,7 +103,11 @@ class SelfTestController extends AbstractController
      * @return JsonResponse
      *
      * @ApiDoc(
-     *   section="selftest"
+     *   section="selftest",
+     *   authentication = true,
+     *   authenticationRoles = {
+     *     "ROLE_MANIPULATE_REQUIREMENTS"
+     *   }
      * )
      * @ApiDescription(
      *   response={

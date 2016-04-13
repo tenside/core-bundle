@@ -47,6 +47,10 @@ class VersionConstraintController extends Controller
      *   statusCodes = {
      *     200 = "When everything worked out ok",
      *     400 = "When the request payload was invalid."
+     *   },
+     *   authentication = true,
+     *   authenticationRoles = {
+     *     "ROLE_NONE"
      *   }
      * )
      * @ApiDescription(

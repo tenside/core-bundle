@@ -42,6 +42,10 @@ class ComposerJsonController extends AbstractController
      *   section="files",
      *   statusCodes = {
      *     200 = "When everything worked out ok"
+     *   },
+     *   authentication = true,
+     *   authenticationRoles = {
+     *     "ROLE_EDIT_COMPOSER_JSON"
      *   }
      * )
      */
@@ -63,6 +67,10 @@ class ComposerJsonController extends AbstractController
      *   section="files",
      *   statusCodes = {
      *     200 = "When everything worked out ok"
+     *   },
+     *   authentication = true,
+     *   authenticationRoles = {
+     *     "ROLE_EDIT_COMPOSER_JSON"
      *   }
      * )
      * @ApiDescription(

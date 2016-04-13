@@ -23,7 +23,6 @@ namespace Tenside\CoreBundle\Controller;
 use Composer\Composer;
 use Composer\Package\PackageInterface;
 use Composer\Repository\CompositeRepository;
-use Composer\Repository\PlatformRepository;
 use Composer\Repository\RepositoryInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -51,6 +50,10 @@ class SearchPackageController extends AbstractController
      *   section="search",
      *   statusCodes = {
      *     200 = "When everything worked out ok"
+     *   },
+     *   authentication = true,
+     *   authenticationRoles = {
+     *     "ROLE_MANIPULATE_REQUIREMENTS"
      *   }
      * )
      * @ApiDescription(

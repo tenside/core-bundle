@@ -41,6 +41,10 @@ class AppKernelController extends AbstractController
      *   section="files",
      *   statusCodes = {
      *     200 = "When everything worked out ok"
+     *   },
+     *   authentication = true,
+     *   authenticationRoles = {
+     *     "ROLE_EDIT_APP_KERNEL"
      *   }
      * )
      */
@@ -62,6 +66,10 @@ class AppKernelController extends AbstractController
      *   section="files",
      *   statusCodes = {
      *     200 = "When everything worked out ok"
+     *   },
+     *   authentication = true,
+     *   authenticationRoles = {
+     *     "ROLE_EDIT_APP_KERNEL"
      *   }
      * )
      * @ApiDescription(
