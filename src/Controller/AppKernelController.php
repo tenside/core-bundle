@@ -155,8 +155,10 @@ class AppKernelController extends AbstractController
             if ((bool) preg_match('/Parse error:\s*syntax error,(.+?)\s+in\s+.+?\s*line\s+(\d+)/', $output, $match)) {
                 return [
                     'errors' => [
-                        'line' => (int) $match[2],
-                        'msg'  => $match[1]
+                        [
+                            'line' => (int) $match[2],
+                            'msg'  => $match[1]
+                        ]
                     ],
                     'warnings' => []
                 ];
@@ -165,8 +167,10 @@ class AppKernelController extends AbstractController
             // This might expose sensitive data but as we are in authenticated context, this is ok.
             return [
                 'errors' => [
-                    'line' => '0',
-                    'msg'  => $output
+                    [
+                        'line' => '0',
+                        'msg'  => $output
+                    ]
                 ],
                 'warnings' => []
             ];
