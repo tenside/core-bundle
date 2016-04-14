@@ -78,8 +78,10 @@ class AppKernelController extends AbstractController
      *       "dataType" = "string",
      *       "description" = "Either OK or ERROR"
      *     },
-     *     "error" = {
-     *       "description" = "Only present when the data contains parse errors",
+     *     "errors" = {
+     *       "description" = "List of contained errors",
+     *       "subType" = "object",
+     *       "actualType" = "collection",
      *       "children" = {
      *         "line" = {
      *           "dataType" = "string",
@@ -88,7 +90,24 @@ class AppKernelController extends AbstractController
      *         },
      *         "msg" = {
      *           "dataType" = "string",
-     *           "description" = "The PHP parse error message",
+     *           "description" = "The error message",
+     *           "required" = true
+     *         }
+     *       }
+     *     },
+     *     "warnings" = {
+     *       "description" = "List of contained warnings",
+     *       "subType" = "object",
+     *       "actualType" = "collection",
+     *       "children" = {
+     *         "line" = {
+     *           "dataType" = "string",
+     *           "description" = "The line number containing the warning",
+     *           "required" = true
+     *         },
+     *         "msg" = {
+     *           "dataType" = "string",
+     *           "description" = "The error message",
      *           "required" = true
      *         }
      *       }
@@ -101,7 +120,7 @@ class AppKernelController extends AbstractController
         $content = $request->getContent();
         $errors  = $this->checkAppKernel($content);
 
-        if (!empty($errors['error'])) {
+        if (!empty($errors['errors'])) {
             $errors['status'] = 'ERROR';
         } else {
             $errors['status'] = 'OK';
@@ -135,19 +154,21 @@ class AppKernelController extends AbstractController
             $output = $process->getErrorOutput();
             if ((bool) preg_match('/Parse error:\s*syntax error,(.+?)\s+in\s+.+?\s*line\s+(\d+)/', $output, $match)) {
                 return [
-                    'error' => [
+                    'errors' => [
                         'line' => (int) $match[2],
                         'msg'  => $match[1]
-                    ]
+                    ],
+                    'warnings' => []
                 ];
             }
 
             // This might expose sensitive data but as we are in authenticated context, this is ok.
             return [
-                'error' => [
+                'errors' => [
                     'line' => '0',
                     'msg'  => $output
-                ]
+                ],
+                'warnings' => []
             ];
         }
 

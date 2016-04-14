@@ -79,15 +79,39 @@ class ComposerJsonController extends AbstractController
      *       "dataType" = "string",
      *       "description" = "Either OK or ERROR"
      *     },
-     *     "error" = {
+     *     "errors" = {
      *       "description" = "List of contained errors",
-     *       "subType" = "string",
-     *       "actualType" = "collection"
+     *       "subType" = "object",
+     *       "actualType" = "collection",
+     *       "children" = {
+     *         "line" = {
+     *           "dataType" = "string",
+     *           "description" = "The line number containing the error",
+     *           "required" = true
+     *         },
+     *         "msg" = {
+     *           "dataType" = "string",
+     *           "description" = "The error message",
+     *           "required" = true
+     *         }
+     *       }
      *     },
-     *     "warning" = {
+     *     "warnings" = {
      *       "description" = "List of contained warnings",
-     *       "subType" = "string",
-     *       "actualType" = "collection"
+     *       "subType" = "object",
+     *       "actualType" = "collection",
+     *       "children" = {
+     *         "line" = {
+     *           "dataType" = "string",
+     *           "description" = "The line number containing the warning",
+     *           "required" = true
+     *         },
+     *         "msg" = {
+     *           "dataType" = "string",
+     *           "description" = "The error message",
+     *           "required" = true
+     *         }
+     *       }
      *     }
      *   }
      * )
@@ -97,7 +121,7 @@ class ComposerJsonController extends AbstractController
         $content = $request->getContent();
         $errors  = $this->checkComposerJson($content);
 
-        if (!empty($errors['error'])) {
+        if (!empty($errors['errors'])) {
             $errors['status'] = 'ERROR';
         } else {
             $errors['status'] = 'OK';
@@ -133,8 +157,18 @@ class ComposerJsonController extends AbstractController
         $warnings = str_replace(dirname($tempFile), '', $warnings);
 
         return [
-            'error'   => $errors,
-            'warning' => $warnings,
+            'errors'   => array_map(
+                function ($str) {
+                    return ['line' => 0, 'msg' => $str];
+                },
+                $errors
+            ),
+            'warnings' => array_map(
+                function ($str) {
+                    return ['line' => 0, 'msg' => $str];
+                },
+                $warnings
+            ),
         ];
     }
 }
