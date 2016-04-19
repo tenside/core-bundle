@@ -224,7 +224,7 @@ class SearchPackageController extends AbstractController
         $threshold       = $data->has('threshold') ? $data->get('threshold') : 20;
         $localRepository = $composer->getRepositoryManager()->getLocalRepository();
         $searcher        = $this->getRepositorySearch($keywords, $type, $composer, $threshold);
-        $results         = $searcher->searchAndDecorate($keywords, $this->getFilters($data));
+        $results         = $searcher->searchAndDecorate($keywords, $this->getFilters($type));
         $responseData    = [];
         $rootPackage     = $composer->getPackage();
         $converter       = new PackageConverter($rootPackage);
