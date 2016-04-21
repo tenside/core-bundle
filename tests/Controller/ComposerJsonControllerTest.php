@@ -85,8 +85,8 @@ class ComposerJsonControllerTest extends TestCase
 
         $result = json_decode($response->getContent(), true);
 
-        $this->assertEmpty($result['warning']);
-        $this->assertEmpty($result['error']);
+        $this->assertEmpty($result['warnings']);
+        $this->assertEmpty($result['errors']);
         $this->assertEquals('OK', $result['status']);
     }
 
@@ -106,7 +106,7 @@ class ComposerJsonControllerTest extends TestCase
 
         $result = json_decode($response->getContent(), true);
 
-        $this->assertNotEmpty($result['warning']);
+        $this->assertNotEmpty($result['warnings']);
         $this->assertEquals('OK', $result['status']);
     }
 
@@ -126,8 +126,8 @@ class ComposerJsonControllerTest extends TestCase
 
         $result = json_decode($response->getContent(), true);
 
-        $this->assertEmpty($result['warning']);
-        $this->assertNotEmpty($result['error']);
+        $this->assertEmpty($result['warnings']);
+        $this->assertNotEmpty($result['errors']);
         $this->assertEquals('ERROR', $result['status']);
     }
 }
