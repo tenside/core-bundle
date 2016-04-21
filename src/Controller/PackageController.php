@@ -198,8 +198,10 @@ class PackageController extends AbstractController
         foreach ($packages->getEntries('/') as $packageName) {
             $packages->set($packageName . '/installed', $packages->get($packageName . '/version'));
         }
+        $packages = $packages->getData();
+        ksort($packages);
 
-        return new JsonResponse($packages->getData(), 200);
+        return new JsonResponse($packages, 200);
     }
 
     /**
