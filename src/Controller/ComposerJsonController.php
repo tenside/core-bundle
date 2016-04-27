@@ -159,12 +159,18 @@ class ComposerJsonController extends AbstractController
         return [
             'errors'   => array_map(
                 function ($str) {
+                    if (preg_match('#Parse error on line (\d+)#', $str, $match)) {
+                        return ['line' => $match[1], 'msg' => $str];
+                    }
                     return ['line' => 0, 'msg' => $str];
                 },
                 $errors
             ),
             'warnings' => array_map(
                 function ($str) {
+                    if (preg_match('#Parse error on line (\d+)#', $str, $match)) {
+                        return ['line' => $match[1], 'msg' => $str];
+                    }
                     return ['line' => 0, 'msg' => $str];
                 },
                 $warnings
