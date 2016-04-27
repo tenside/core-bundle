@@ -22,6 +22,8 @@ namespace Tenside\CoreBundle\Controller;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Tenside\Core\SelfTest\Cli\SelfTestCliCanFork;
+use Tenside\Core\SelfTest\Php\SelfTestEnvPopulated;
 use Tenside\CoreBundle\Annotation\ApiDescription;
 use Tenside\Core\SelfTest\Cli\SelfTestCanSpawnProcesses;
 use Tenside\Core\SelfTest\Cli\SelfTestCliArguments;
@@ -142,6 +144,11 @@ class SelfTestController extends AbstractController
         if ($phpArguments = $config->getPhpCliArguments()) {
             $result['php_cli_arguments'] = $phpArguments;
         }
+        if ($phpEnvironment = $config->getPhpCliEnvironment()) {
+            $result['php_cli_environment'] = $phpEnvironment;
+        }
+
+        $result['php_can_fork'] = $config->isForkingAvailable();
 
         return JsonResponse::create($result);
     }
@@ -179,9 +186,11 @@ class SelfTestController extends AbstractController
         $tester->addTest(new SelfTestFileOwnerMatches());
         $tester->addTest(new SelfTestAllowUrlFopenEnabled());
         $tester->addTest(new SelfTestSuhosin());
+        $tester->addTest(new SelfTestEnvPopulated());
         $tester->addTest(new SelfTestCanSpawnProcesses());
         $tester->addTest(new SelfTestCliRuntime());
         $tester->addTest(new SelfTestCliArguments());
+        $tester->addTest(new SelfTestCliCanFork());
 
         return $tester;
     }
