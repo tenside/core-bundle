@@ -136,10 +136,10 @@ class SelfTestController extends AbstractController
         $config = $tester->getAutoConfig();
         $result = [];
 
-        if ($phpCli = $config->getPhpInterpreter()) {
+        if ($phpCli = $config->getPhpCliBinary()) {
             $result['php_cli'] = $phpCli;
         }
-        if ($phpArguments = $config->getCommandLineArguments()) {
+        if ($phpArguments = $config->getPhpCliArguments()) {
             $result['php_cli_arguments'] = $phpArguments;
         }
 
