@@ -24,7 +24,7 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Process\Process;
+use Tenside\Core\Util\PhpProcessSpawner;
 use Tenside\CoreBundle\Annotation\ApiDescription;
 
 /**
@@ -156,13 +156,15 @@ class AppKernelController extends AbstractController
             ];
         }
 
-        $phpCli = 'php';
         $config = $this->getTensideConfig();
-        if ($config->has('php_cli')) {
-            $phpCli = $config->get('php_cli');
-        }
 
-        $process = new Process(escapeshellcmd($phpCli) . ' -l');
+        $home    = $this->get('tenside.home')->homeDir();
+        $process = PhpProcessSpawner::create($config, $home)->spawn(
+            [
+                '-l',
+            ]
+        );
+
         $process->setInput($content);
         $process->run();
 
