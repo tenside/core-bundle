@@ -50,7 +50,11 @@ class AppKernelController extends AbstractController
      */
     public function getAppKernelAction()
     {
-        return new Response(file_get_contents($this->getAppKernelPath()));
+        return new Response(
+            file_get_contents($this->getAppKernelPath()),
+            200,
+            ['Content-Type' => 'application/x-httpd-php-source']
+        );
     }
 
     /**
