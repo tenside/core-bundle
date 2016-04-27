@@ -156,25 +156,16 @@ class ComposerJsonController extends AbstractController
         $errors   = str_replace(dirname($tempFile), '', $errors);
         $warnings = str_replace(dirname($tempFile), '', $warnings);
 
+        $lineMapper = function ($str) {
+            if (preg_match('#Parse error on line (\d+)#', $str, $match)) {
+                return ['line' => $match[1], 'msg' => $str];
+            }
+            return ['line' => 0, 'msg' => $str];
+        };
+
         return [
-            'errors'   => array_map(
-                function ($str) {
-                    if (preg_match('#Parse error on line (\d+)#', $str, $match)) {
-                        return ['line' => $match[1], 'msg' => $str];
-                    }
-                    return ['line' => 0, 'msg' => $str];
-                },
-                $errors
-            ),
-            'warnings' => array_map(
-                function ($str) {
-                    if (preg_match('#Parse error on line (\d+)#', $str, $match)) {
-                        return ['line' => $match[1], 'msg' => $str];
-                    }
-                    return ['line' => 0, 'msg' => $str];
-                },
-                $warnings
-            ),
+            'errors'   => array_map($lineMapper, $errors),
+            'warnings' => array_map($lineMapper, $warnings),
         ];
     }
 }
