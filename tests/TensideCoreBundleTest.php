@@ -59,13 +59,14 @@ class TensideCoreBundleTest extends TestCase
     public function testBootRegistersAnnotationInLoader()
     {
         $bundle = new TensideCoreBundle();
+        AnnotationRegistry::reset();
 
         $this->assertFalse(AnnotationRegistry::loadAnnotationClass('Tenside\CoreBundle\Annotation\ApiDescription'));
         $this->assertFalse(class_exists('Tenside\CoreBundle\Annotation\ApiDescription', false));
 
         $bundle->boot();
         $this->assertFalse(AnnotationRegistry::loadAnnotationClass('NonExistant\\Annotation'));
-        // Ensure the class does not get loaded by requiring anoter annotation.
+        // Ensure the class does not get loaded by requiring another annotation.
         $this->assertFalse(class_exists('Tenside\CoreBundle\Annotation\ApiDescription', false));
 
         $this->assertTrue(AnnotationRegistry::loadAnnotationClass('Tenside\CoreBundle\Annotation\ApiDescription'));
