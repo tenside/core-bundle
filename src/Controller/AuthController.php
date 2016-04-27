@@ -23,6 +23,7 @@ namespace Tenside\CoreBundle\Controller;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Tenside\CoreBundle\Annotation\ApiDescription;
 use Tenside\CoreBundle\Security\UserInformationInterface;
 
@@ -33,6 +34,8 @@ class AuthController extends AbstractController
 {
     /**
      * Try to validate the user from the request and return a jwt authentication result then.
+     *
+     * @param Request $request The request.
      *
      * @return JsonResponse
      *
@@ -46,6 +49,13 @@ class AuthController extends AbstractController
      *   }
      * )
      * @ApiDescription(
+     *   request={
+     *    "ttl" = {
+     *      "dataType" = "int",
+     *      "description" = "The amount of seconds the token shall be valid or -1 for unlimited (default: 3600).",
+     *      "required" = false
+     *    }
+     *   },
      *   response={
      *    "status" = {
      *      "dataType" = "choice",
@@ -68,7 +78,7 @@ class AuthController extends AbstractController
      *   },
      * )
      */
-    public function checkAuthAction()
+    public function checkAuthAction(Request $request)
     {
         $user = $this->getUser();
 
@@ -76,7 +86,13 @@ class AuthController extends AbstractController
             if (!$user instanceof UserInformationInterface) {
                 throw new \RuntimeException('Invalid user object');
             }
-            $token = $this->get('tenside.jwt_authenticator')->getTokenForData($user);
+
+            $lifetime = $request->get('ttl', 3600);
+            if (-1 === $lifetime) {
+                $lifetime = null;
+            }
+
+            $token = $this->get('tenside.jwt_authenticator')->getTokenForData($user, $lifetime);
             return new JsonResponse(
                 [
                     'status'    => 'OK',

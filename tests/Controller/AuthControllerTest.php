@@ -23,6 +23,7 @@ namespace Tenside\CoreBundle\Test\Controller;
 
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Tenside\CoreBundle\Security\JWTAuthenticator;
@@ -38,6 +39,8 @@ class AuthControllerTest extends TestCase
      * Build the container for authentication.
      *
      * @return Container
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     private function buildContainer()
     {
@@ -47,7 +50,9 @@ class AuthControllerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $jwtAuth->method('getTokenForData')->willReturn('Auth-Token');
+        $jwtAuth->method('getTokenForData')->willReturnCallback(function ($userData, $lifetime) {
+            return 'Auth-Token' . $lifetime;
+        });
 
         $container = $this->createDefaultContainer(
             [
@@ -64,20 +69,28 @@ class AuthControllerTest extends TestCase
      *
      * @param UserInformation $data The user data to return from auth providers.
      *
+     * @param null|int        $ttl  The ttl for the token.
+     *
      * @return JsonResponse|Response
      */
-    private function handleAuth($data)
+    private function handleAuth($data, $ttl = null)
     {
         $controller = $this->getMock(AuthController::class, ['getUser']);
         $controller->method('getUser')->willReturn($data);
         /** @var AuthController $controller */
         $controller->setContainer($this->buildContainer());
 
-        return $controller->checkAuthAction();
+        $parameters = [];
+        if (null !== $ttl) {
+            $parameters = ['ttl' => $ttl];
+        }
+        $request = new Request($parameters);
+
+        return $controller->checkAuthAction($request);
     }
 
     /**
-     * Test retrieval of the composer json.
+     * Test unauthorized response for null data.
      *
      * @return void
      */
@@ -93,14 +106,14 @@ class AuthControllerTest extends TestCase
     }
 
     /**
-     * Test posting of a composer.json that contains a warning.
+     * Test authorized response for valid user data.
      *
      * @return void
      */
     public function testPostValidCredentials()
     {
         $response = $this->handleAuth(new UserInformation(['acl' => 7, 'username' => 'foobar']));
-        $result = json_decode($response->getContent(), true);
+        $result   = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('status', $result);
         $this->assertArrayHasKey('token', $result);
         $this->assertArrayHasKey('acl', $result);
@@ -108,6 +121,26 @@ class AuthControllerTest extends TestCase
         $this->assertEquals('OK', $result['status']);
         $this->assertEquals('foobar', $result['username']);
         $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('Auth-Token3600', $result['token']);
+    }
+
+    /**
+     * Test authorized response for valid user data with valid ttl.
+     *
+     * @return void
+     */
+    public function testPostValidCredentialsWithTtl()
+    {
+        $response = $this->handleAuth(new UserInformation(['acl' => 7, 'username' => 'foobar']), 3600);
+        $result   = json_decode($response->getContent(), true);
+        $this->assertArrayHasKey('status', $result);
+        $this->assertArrayHasKey('token', $result);
+        $this->assertArrayHasKey('acl', $result);
+        $this->assertArrayHasKey('username', $result);
+        $this->assertEquals('OK', $result['status']);
+        $this->assertEquals('foobar', $result['username']);
+        $this->assertEquals(200, $response->getStatusCode());
+
     }
 
     /**
@@ -122,6 +155,6 @@ class AuthControllerTest extends TestCase
         $controller = $this->getMock(AuthController::class, ['getUser']);
         $controller->method('getUser')->willReturn(new \stdClass());
 
-        $controller->checkAuthAction();
+        $controller->checkAuthAction(new Request());
     }
 }
