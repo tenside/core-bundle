@@ -45,7 +45,7 @@ class TensideJsonConfigFactoryTest extends TestCase
 
         $this->assertInstanceOf(TensideJsonConfig::class, $tenside);
 
-        $jsonFile = new \ReflectionProperty($tenside, 'jsonFile');
+        $jsonFile = new \ReflectionProperty($tenside, 'data');
         $jsonFile->setAccessible(true);
         $diskFile = $jsonFile->getValue($tenside);
 

@@ -21,6 +21,7 @@
 namespace Tenside\CoreBundle\Test\Security;
 
 use Tenside\Core\Config\SourceJson;
+use Tenside\Core\Util\JsonFile;
 use Tenside\CoreBundle\Security\UserInformation;
 use Tenside\CoreBundle\Security\UserInformationInterface;
 use Tenside\CoreBundle\Security\UserProviderFromConfig;
@@ -38,7 +39,7 @@ class UserProviderFromConfigTest extends TestCase
      */
     public function testSupportsClass()
     {
-        $provider = new UserProviderFromConfig(new SourceJson($this->getTempFile('tenside.json')));
+        $provider = new UserProviderFromConfig(new SourceJson(new JsonFile($this->getTempFile('tenside.json'))));
 
         $this->assertFalse($provider->supportsClass('UnknownClass'));
         $this->assertTrue($provider->supportsClass(UserInformation::class));
@@ -53,7 +54,7 @@ class UserProviderFromConfigTest extends TestCase
      */
     public function testUnknownUserThrowsException()
     {
-        $provider = new UserProviderFromConfig(new SourceJson($this->getTempFile('tenside.json')));
+        $provider = new UserProviderFromConfig(new SourceJson(new JsonFile($this->getTempFile('tenside.json'))));
 
         $provider->loadUserByUsername('unknown-username');
     }
@@ -65,7 +66,7 @@ class UserProviderFromConfigTest extends TestCase
      */
     public function testFunctionality()
     {
-        $config   = new SourceJson($this->getTempFile('tenside.json'));
+        $config   = new SourceJson(new JsonFile($this->getTempFile('tenside.json')));
         $provider = new UserProviderFromConfig($config);
         $provider->addUser(new UserInformation(['username' => 'tester', 'foo' => 'bar']));
         $this->assertTrue($config->has('auth-password/tester'));
@@ -88,7 +89,7 @@ class UserProviderFromConfigTest extends TestCase
      */
     public function testUnknownUserClassThrowsException()
     {
-        $provider = new UserProviderFromConfig(new SourceJson($this->getTempFile('tenside.json')));
+        $provider = new UserProviderFromConfig(new SourceJson(new JsonFile($this->getTempFile('tenside.json'))));
 
         $provider->refreshUser(
             $this->getMockForAbstractClass(UserInformationInterface::class)

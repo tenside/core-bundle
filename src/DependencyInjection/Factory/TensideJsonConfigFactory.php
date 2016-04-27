@@ -21,6 +21,7 @@
 namespace Tenside\CoreBundle\DependencyInjection\Factory;
 
 use Tenside\Core\Config\TensideJsonConfig;
+use Tenside\Core\Util\JsonFile;
 use Tenside\CoreBundle\Util\HomePathDeterminator;
 
 /**
@@ -39,6 +40,6 @@ class TensideJsonConfigFactory
      */
     public static function create(HomePathDeterminator $home)
     {
-        return new TensideJsonConfig($home->tensideDataDir());
+        return new TensideJsonConfig(new JsonFile($home->tensideDataDir() . DIRECTORY_SEPARATOR . 'tenside.json'));
     }
 }

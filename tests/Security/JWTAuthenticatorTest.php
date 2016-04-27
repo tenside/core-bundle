@@ -27,6 +27,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Tenside\Core\Config\TensideJsonConfig;
+use Tenside\Core\Util\JsonFile;
 use Tenside\CoreBundle\Security\JavascriptWebToken;
 use Tenside\CoreBundle\Security\JWTAuthenticator;
 use Tenside\CoreBundle\Security\UserInformationInterface;
@@ -44,7 +45,7 @@ class JWTAuthenticatorTest extends TestCase
      */
     public function testCreate()
     {
-        $config = new TensideJsonConfig($this->getTempDir());
+        $config = new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json'));
         $config->set('secret', 'very-secret-secret');
 
         $this->assertInstanceOf(JWTAuthenticator::class, new JWTAuthenticator($config));
@@ -57,7 +58,7 @@ class JWTAuthenticatorTest extends TestCase
      */
     public function testOnAuthenticationFailure()
     {
-        $auth = new JWTAuthenticator(new TensideJsonConfig($this->getTempDir()));
+        $auth = new JWTAuthenticator(new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json')));
 
         $response = $auth->onAuthenticationFailure(new Request(), new AuthenticationException('Cows can\'t fly!'));
 
@@ -73,7 +74,7 @@ class JWTAuthenticatorTest extends TestCase
      */
     public function testSupportsTokenSuccess()
     {
-        $auth = new JWTAuthenticator(new TensideJsonConfig($this->getTempDir()));
+        $auth = new JWTAuthenticator(new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json')));
 
         $this->assertTrue(
             $auth->supportsToken(new JavascriptWebToken('jwt-token-data', 'provider-key'), 'provider-key')
@@ -87,7 +88,7 @@ class JWTAuthenticatorTest extends TestCase
      */
     public function testSupportsTokenFailsOnProviderKeyMismatch()
     {
-        $auth = new JWTAuthenticator(new TensideJsonConfig($this->getTempDir()));
+        $auth = new JWTAuthenticator(new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json')));
 
         $this->assertFalse(
             $auth->supportsToken(new JavascriptWebToken('jwt-token-data', 'provider-key'), 'another-provider-key')
@@ -101,7 +102,7 @@ class JWTAuthenticatorTest extends TestCase
      */
     public function testSupportsTokenFailsOnInvalidTokenClass()
     {
-        $auth  = new JWTAuthenticator(new TensideJsonConfig($this->getTempDir()));
+        $auth  = new JWTAuthenticator(new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json')));
         $token = $this->getMockForAbstractClass(TokenInterface::class);
 
         $this->assertFalse(
@@ -116,7 +117,7 @@ class JWTAuthenticatorTest extends TestCase
      */
     public function testGenerateTokenForUser()
     {
-        $config = new TensideJsonConfig($this->getTempDir());
+        $config = new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json'));
         $config->set('secret', 'very-secret-secret');
 
         $user = $this
@@ -164,7 +165,7 @@ class JWTAuthenticatorTest extends TestCase
      */
     public function testGenerateTokenForUserRestrictedToDomain()
     {
-        $config = new TensideJsonConfig($this->getTempDir());
+        $config = new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json'));
         $config->set('secret', 'very-secret-secret');
         $config->set('domain', 'example.org');
 
@@ -214,7 +215,7 @@ class JWTAuthenticatorTest extends TestCase
      */
     public function testCreateTokenSuccess()
     {
-        $config = new TensideJsonConfig($this->getTempDir());
+        $config = new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json'));
         $config->set('secret', 'very-secret-secret');
 
         $user = $this
@@ -246,7 +247,7 @@ class JWTAuthenticatorTest extends TestCase
      */
     public function testCreateTokenIgnoresHeaderCase()
     {
-        $config = new TensideJsonConfig($this->getTempDir());
+        $config = new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json'));
         $config->set('secret', 'very-secret-secret');
 
         $user = $this
@@ -278,7 +279,7 @@ class JWTAuthenticatorTest extends TestCase
      */
     public function testCreateTokenReturnsNullWithoutSecret()
     {
-        $auth    = new JWTAuthenticator(new TensideJsonConfig($this->getTempDir()));
+        $auth    = new JWTAuthenticator(new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json')));
         $request = Request::create('https://example.com/');
         $request->headers->set('Authorization', 'Bearer token');
 
@@ -292,7 +293,7 @@ class JWTAuthenticatorTest extends TestCase
      */
     public function testCreateTokenReturnsNullWithoutHeader()
     {
-        $config = new TensideJsonConfig($this->getTempDir());
+        $config = new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json'));
         $config->set('secret', 'very-secret-secret');
 
         $auth = new JWTAuthenticator($config);
@@ -306,7 +307,7 @@ class JWTAuthenticatorTest extends TestCase
      */
     public function testCreateTokenReturnsNullWithUnknownHeaderContent()
     {
-        $config = new TensideJsonConfig($this->getTempDir());
+        $config = new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json'));
         $config->set('secret', 'very-secret-secret');
 
         $request = Request::create('https://example.com/');
@@ -323,7 +324,7 @@ class JWTAuthenticatorTest extends TestCase
      */
     public function testCreateTokenReturnsNullWhenTokenCanNotBeDecoded()
     {
-        $config = new TensideJsonConfig($this->getTempDir());
+        $config = new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json'));
         $config->set('secret', 'very-secret-secret');
 
         $request = Request::create('https://example.com/');
@@ -340,7 +341,7 @@ class JWTAuthenticatorTest extends TestCase
      */
     public function testCreateTokenReturnsNullWhenTokenIsNotFromUs()
     {
-        $config = new TensideJsonConfig($this->getTempDir());
+        $config = new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json'));
         $config->set('secret', 'very-secret-secret');
         $config->set('domain', 'example.org');
 
@@ -360,7 +361,7 @@ class JWTAuthenticatorTest extends TestCase
      */
     public function testCreateTokenReturnsNullWhenTokenIsNotFromUsButAnonymous()
     {
-        $config = new TensideJsonConfig($this->getTempDir());
+        $config = new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json'));
         $config->set('secret', 'very-secret-secret');
         $config->set('domain', 'example.org');
 
@@ -380,7 +381,7 @@ class JWTAuthenticatorTest extends TestCase
      */
     public function testCreateTokenReturnsNullWhenTokenIsNotAnonymousButWeDontRestrict()
     {
-        $config = new TensideJsonConfig($this->getTempDir());
+        $config = new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json'));
         $config->set('secret', 'very-secret-secret');
 
         $tokenFromThem = \JWT::encode(['aud' => 'example.com'], 'very-secret-secret');
@@ -399,7 +400,7 @@ class JWTAuthenticatorTest extends TestCase
      */
     public function testAuthenticateTokenSuccess()
     {
-        $config = new TensideJsonConfig($this->getTempDir());
+        $config = new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json'));
         $config->set('secret', 'very-secret-secret');
 
         $auth = new JWTAuthenticator($config);
@@ -450,7 +451,7 @@ class JWTAuthenticatorTest extends TestCase
      */
     public function testAuthenticateTokenWithoutSecretFails()
     {
-        $auth = new JWTAuthenticator(new TensideJsonConfig($this->getTempDir()));
+        $auth = new JWTAuthenticator(new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json')));
         $auth->authenticateToken(
             $this->getMockForAbstractClass(TokenInterface::class),
             $this->getMockForAbstractClass(UserProviderInterface::class),
@@ -469,7 +470,7 @@ class JWTAuthenticatorTest extends TestCase
      */
     public function testAuthenticateTokenFailsWhenCredentialsAreInvalid()
     {
-        $config = new TensideJsonConfig($this->getTempDir());
+        $config = new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json'));
         $config->set('secret', 'very-secret-secret');
 
         $auth = new JWTAuthenticator($config);
@@ -501,7 +502,7 @@ class JWTAuthenticatorTest extends TestCase
      */
     public function testAuthenticateTokenFailsWhenUserCanNotBeLoaded()
     {
-        $config = new TensideJsonConfig($this->getTempDir());
+        $config = new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json'));
         $config->set('secret', 'very-secret-secret');
 
         $auth = new JWTAuthenticator($config);

@@ -26,6 +26,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Tenside\Core\Task\Composer\InstallTask;
 use Tenside\Core\Util\JsonArray;
+use Tenside\Core\Util\JsonFile;
 use Tenside\CoreBundle\Controller\InstallProjectController;
 use Tenside\Core\Config\TensideJsonConfig;
 use Tenside\CoreBundle\Util\HomePathDeterminator;
@@ -78,7 +79,7 @@ class InstallProjectControllerTest extends TestCase
         $status->method('isTensideConfigured')->willReturn(false);
         $container->set('tenside.status', $status);
 
-        $config = new TensideJsonConfig($this->getTempDir());
+        $config = new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json'));
         $container->set('tenside.config', $config);
 
         $encoder = $this
@@ -161,7 +162,7 @@ class InstallProjectControllerTest extends TestCase
         $status->method('isTensideConfigured')->willReturn(false);
         $container->set('tenside.status', $status);
 
-        $config = new TensideJsonConfig($this->getTempDir());
+        $config = new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json'));
         $container->set('tenside.config', $config);
 
         $encoder = $this
