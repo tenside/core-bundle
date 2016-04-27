@@ -46,16 +46,17 @@ class AuthController extends AbstractController
      *   statusCodes = {
      *     200 = "When everything worked out ok",
      *     401 = "When the request was unauthorized."
+     *   },
+     *   filters = {
+     *     {
+     *       "name": "ttl",
+     *       "dataType" = "int",
+     *       "description" = "The amount of seconds the token shall be valid or -1 for unlimited (default: 3600).",
+     *       "required" = false
+     *     }
      *   }
      * )
      * @ApiDescription(
-     *   request={
-     *    "ttl" = {
-     *      "dataType" = "int",
-     *      "description" = "The amount of seconds the token shall be valid or -1 for unlimited (default: 3600).",
-     *      "required" = false
-     *    }
-     *   },
      *   response={
      *    "status" = {
      *      "dataType" = "choice",
@@ -98,7 +99,8 @@ class AuthController extends AbstractController
                     'status'    => 'OK',
                     'token'     => $token,
                     'acl'       => $user->getRoles(),
-                    'username'  => $user->getUsername()
+                    'username'  => $user->getUsername(),
+                    'ttl'       => (null === $lifetime) ? 'unlimited' : date('r', (time() + $lifetime))
                 ],
                 JsonResponse::HTTP_OK,
                 ['Authentication' => $token]
