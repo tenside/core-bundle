@@ -140,6 +140,18 @@ class AppKernelController extends AbstractController
      */
     private function checkAppKernel($content)
     {
+        if (substr($content, 0, 5) !== '<?php') {
+            return [
+                'errors' => [
+                    [
+                        'line' => '1',
+                        'msg'  => 'AppKernel.php must start with "<?php" to work correctly'
+                    ]
+                ],
+                'warnings' => []
+            ];
+        }
+
         $phpCli = 'php';
         $config = $this->getTensideConfig();
         if ($config->has('php_cli')) {

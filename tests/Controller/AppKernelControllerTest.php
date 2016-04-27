@@ -93,6 +93,24 @@ class AppKernelControllerTest extends TestCase
     }
 
     /**
+     * Test posting of a AppKernel not containing php code.
+     *
+     * @return void
+     */
+    public function testPostNonPhp()
+    {
+        $response = $this->handlePostData(<<<EOF
+This is plaintext without leading not beginning with <?php
+EOF
+        );
+
+        $result = json_decode($response->getContent(), true);
+        $this->assertNotEmpty($result['errors']);
+        $this->assertEquals('ERROR', $result['status']);
+        $this->assertEquals('1', $result['errors'][0]['line']);
+    }
+
+    /**
      * Test posting of a AppKernel containing errors.
      *
      * @return void
@@ -119,6 +137,7 @@ EOF
     public function testPostWithUnknownError()
     {
         $content  = <<<EOF
+<?php // This will not get validated as php-cli is invalid.
 EOF;
         $response = $this->handlePostData($content, 'invalid-path-to-php-cli');
 
