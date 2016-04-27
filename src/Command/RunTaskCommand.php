@@ -143,7 +143,11 @@ class RunTaskCommand extends ContainerAwareCommand
     {
         /** @var LoggerInterface $logger */
         $logger = $this->getContainer()->get('logger');
-        if (!FunctionAvailabilityCheck::isFunctionEnabled('pcntl_fork', 'pcntl')) {
+        if (!$this->getContainer()->get('tenside.config')->isForkingAvailable()) {
+            $logger->warning('Forking disabled by configuration, execution will block until the command has finished.');
+
+            return false;
+        } elseif (!FunctionAvailabilityCheck::isFunctionEnabled('pcntl_fork', 'pcntl')) {
             $logger->warning('pcntl_fork() is not available, execution will block until the command has finished.');
 
             return false;
