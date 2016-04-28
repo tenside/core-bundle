@@ -115,12 +115,10 @@ class InstallProjectController extends AbstractController
         $tensideConfig = $this->get('tenside.config');
         $tensideConfig->set('secret', $secret);
 
-        if ($inputData->has('configuration/php_cli')) {
-            $tensideConfig->set('php_cli', $inputData->get('configuration/php_cli'));
-        }
-
-        if ($inputData->has('configuration/php_cli_arguments')) {
-            $tensideConfig->set('php_cli_arguments', $inputData->get('configuration/php_cli_arguments'));
+        if ($inputData->has('configuration')) {
+            foreach ($inputData->get('configuration', true) as $key => $value) {
+                $tensideConfig->set($key, $value);
+            }
         }
 
         // Add the user now.
