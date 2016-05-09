@@ -23,6 +23,7 @@ namespace Tenside\CoreBundle\Controller;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Tenside\Core\SelfTest\Cli\SelfTestCliCanFork;
+use Tenside\Core\SelfTest\Cli\SelfTestCliOsChecks;
 use Tenside\Core\SelfTest\Php\SelfTestEnvPopulated;
 use Tenside\CoreBundle\Annotation\ApiDescription;
 use Tenside\Core\SelfTest\Cli\SelfTestCanSpawnProcesses;
@@ -148,6 +149,10 @@ class SelfTestController extends AbstractController
             $result['php_cli_environment'] = $phpEnvironment;
         }
 
+        if ($phpEnvironment = $config->isForceToBackgroundEnabled()) {
+            $result['php_force_background'] = true;
+        }
+
         $result['php_can_fork'] = $config->isForkingAvailable();
 
         return JsonResponse::create($result);
@@ -191,6 +196,7 @@ class SelfTestController extends AbstractController
         $tester->addTest(new SelfTestCliRuntime());
         $tester->addTest(new SelfTestCliArguments());
         $tester->addTest(new SelfTestCliCanFork());
+        $tester->addTest(new SelfTestCliOsChecks());
 
         return $tester;
     }
