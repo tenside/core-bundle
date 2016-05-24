@@ -90,7 +90,7 @@ class TaskRunnerController extends AbstractController
             $tasks[$taskId] = $this->convertTaskToArray($list->getTask($taskId));
         }
 
-        return $this->createJsonResponse($tasks);
+        return $this->createJsonResponse($tasks, true);
     }
 
     /**
@@ -237,6 +237,7 @@ class TaskRunnerController extends AbstractController
 
         return $this->createJsonResponse(
             [$this->convertTaskToArray($this->getTensideTasks()->getTask($taskId))],
+            false,
             'OK',
             JsonResponse::HTTP_CREATED
         );
@@ -443,17 +444,16 @@ class TaskRunnerController extends AbstractController
      * Create a JsonResponse based on an array of tasks.
      *
      * @param Task[] $tasks
+     * @param bool   $isCollection
      * @param string $status
      * @param int    $httpStatus
      *
      * @return JsonResponse
      */
-    private function createJsonResponse(array $tasks, $status = 'OK', $httpStatus = JsonResponse::HTTP_OK)
+    private function createJsonResponse(array $tasks, $isCollection = false, $status = 'OK', $httpStatus = JsonResponse::HTTP_OK)
     {
-        $data = [
-            'status' => $status
-        ];
-        $key = 1 === count($tasks) ? 'task' : 'tasks';
+        $data       = ['status' => $status];
+        $key        = $isCollection ? 'tasks' : 'task';
         $data[$key] = $tasks;
 
         return JsonResponse::create($data, $httpStatus)
