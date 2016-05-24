@@ -63,6 +63,10 @@ class TaskRunnerController extends AbstractController
      *         "type" = {
      *           "dataType" = "string",
      *           "description" = "The type of the task."
+     *         },
+     *         "created_at" = {
+     *           "dataType" = "string",
+     *           "description" = "The date the task was created in ISO 8601 format."
      *         }
      *       }
      *     }
@@ -75,8 +79,9 @@ class TaskRunnerController extends AbstractController
         $list   = $this->getTensideTasks();
         foreach ($list->getIds() as $taskId) {
             $result[$taskId] = [
-                'id'   => $taskId,
-                'type' => $list->getTask($taskId)->getType()
+                'id'         => $taskId,
+                'type'       => $list->getTask($taskId)->getType(),
+                'created_at' => $list->getTask($taskId)->getCreatedAt()->format(\DateTime::ISO8601)
             ];
         }
 
@@ -122,6 +127,10 @@ class TaskRunnerController extends AbstractController
      *       "dataType" = "string",
      *       "description" = "The task type."
      *     },
+     *     "created_at" = {
+     *       "dataType" = "string",
+     *       "description" = "The date the task was created in ISO 8601 format."
+     *     },
      *     "output" = {
      *       "dataType" = "string",
      *       "description" = "The command line output of the task."
@@ -145,9 +154,10 @@ class TaskRunnerController extends AbstractController
 
         return JsonResponse::create(
             [
-                'status' => $task->getStatus(),
-                'type'   => $task->getType(),
-                'output' => $task->getOutput($offset)
+                'status'     => $task->getStatus(),
+                'type'       => $task->getType(),
+                'created_at' => $task->getCreatedAt()->format(\DateTime::ISO8601),
+                'output'     => $task->getOutput($offset)
             ]
         );
     }
