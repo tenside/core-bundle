@@ -54,11 +54,18 @@ class TaskRunnerController extends AbstractController
      * )
      * @ApiDescription(
      *   response={
-     *     "<task-id>[]" = {
-     *       "children" = {
+     *     "status" = {
+     *       "dataType" = "string",
+     *       "description" = "OK on success"
+     *     },
+     *     "tasks" = {
      *         "id" = {
      *           "dataType" = "string",
      *           "description" = "The task id."
+     *         },
+     *         "status" = {
+     *           "dataType" = "string",
+     *           "description" = "The task status."
      *         },
      *         "type" = {
      *           "dataType" = "string",
@@ -67,26 +74,23 @@ class TaskRunnerController extends AbstractController
      *         "created_at" = {
      *           "dataType" = "string",
      *           "description" = "The date the task was created in ISO 8601 format."
+     *         },
+     *         "output" = {
+     *            "dataType" = "string",
+     *            "description" = "The command line output of the task."
      *         }
-     *       }
-     *     }
      *   }
      * )
      */
     public function getTasksAction()
     {
-        $result = [];
+        $tasks = [];
         $list   = $this->getTensideTasks();
         foreach ($list->getIds() as $taskId) {
-            $result[$taskId] = [
-                'id'         => $taskId,
-                'type'       => $list->getTask($taskId)->getType(),
-                'created_at' => $list->getTask($taskId)->getCreatedAt()->format(\DateTime::ISO8601)
-            ];
+            $tasks[$taskId] = $this->convertTaskToArray($list->getTask($taskId));
         }
 
-        return JsonResponse::create($result)
-            ->setEncodingOptions((JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_FORCE_OBJECT));
+        return $this->createJsonResponse($tasks);
     }
 
     /**
@@ -121,20 +125,29 @@ class TaskRunnerController extends AbstractController
      *   response={
      *     "status" = {
      *       "dataType" = "string",
-     *       "description" = "The task status."
+     *       "description" = "OK on success"
      *     },
-     *     "type" = {
-     *       "dataType" = "string",
-     *       "description" = "The task type."
-     *     },
-     *     "created_at" = {
-     *       "dataType" = "string",
-     *       "description" = "The date the task was created in ISO 8601 format."
-     *     },
-     *     "output" = {
-     *       "dataType" = "string",
-     *       "description" = "The command line output of the task."
-     *     }
+     *     "task" = {
+     *         "id" = {
+     *           "dataType" = "string",
+     *           "description" = "The task id."
+     *         },
+     *         "status" = {
+     *           "dataType" = "string",
+     *           "description" = "The task status."
+     *         },
+     *         "type" = {
+     *           "dataType" = "string",
+     *           "description" = "The type of the task."
+     *         },
+     *         "created_at" = {
+     *           "dataType" = "string",
+     *           "description" = "The date the task was created in ISO 8601 format."
+     *         },
+     *         "output" = {
+     *            "dataType" = "string",
+     *            "description" = "The command line output of the task."
+     *         }
      *   }
      * )
      */
@@ -152,14 +165,7 @@ class TaskRunnerController extends AbstractController
             $offset = (int) $request->query->get('offset');
         }
 
-        return JsonResponse::create(
-            [
-                'status'     => $task->getStatus(),
-                'type'       => $task->getType(),
-                'created_at' => $task->getCreatedAt()->format(\DateTime::ISO8601),
-                'output'     => $task->getOutput($offset)
-            ]
-        );
+        return $this->createJsonResponse([$this->convertTaskToArray($task, $offset)]);
     }
 
     /**
@@ -188,9 +194,26 @@ class TaskRunnerController extends AbstractController
      *       "description" = "OK on success"
      *     },
      *     "task" = {
-     *       "dataType" = "string",
-     *       "description" = "The id of the created task."
-     *     }
+     *         "id" = {
+     *           "dataType" = "string",
+     *           "description" = "The task id."
+     *         },
+     *         "status" = {
+     *           "dataType" = "string",
+     *           "description" = "The task status."
+     *         },
+     *         "type" = {
+     *           "dataType" = "string",
+     *           "description" = "The type of the task."
+     *         },
+     *         "created_at" = {
+     *           "dataType" = "string",
+     *           "description" = "The date the task was created in ISO 8601 format."
+     *         },
+     *         "output" = {
+     *            "dataType" = "string",
+     *            "description" = "The command line output of the task."
+     *         }
      *   }
      * )
      */
@@ -212,11 +235,9 @@ class TaskRunnerController extends AbstractController
             throw new NotAcceptableHttpException($exception->getMessage());
         }
 
-        return JsonResponse::create(
-            [
-                'status' => 'OK',
-                'task'   => $taskId
-            ],
+        return $this->createJsonResponse(
+            [$this->convertTaskToArray($this->getTensideTasks()->getTask($taskId))],
+            'OK',
             JsonResponse::HTTP_CREATED
         );
     }
@@ -299,14 +320,27 @@ class TaskRunnerController extends AbstractController
      *       "dataType" = "string",
      *       "description" = "OK on success"
      *     },
-     *     "type" = {
-     *       "dataType" = "string",
-     *       "description" = "The type of the started task."
-     *     },
      *     "task" = {
-     *       "dataType" = "string",
-     *       "description" = "The id of the started task."
-     *     }
+     *         "id" = {
+     *           "dataType" = "string",
+     *           "description" = "The task id."
+     *         },
+     *         "status" = {
+     *           "dataType" = "string",
+     *           "description" = "The task status."
+     *         },
+     *         "type" = {
+     *           "dataType" = "string",
+     *           "description" = "The type of the task."
+     *         },
+     *         "created_at" = {
+     *           "dataType" = "string",
+     *           "description" = "The date the task was created in ISO 8601 format."
+     *         },
+     *         "output" = {
+     *            "dataType" = "string",
+     *            "description" = "The command line output of the task."
+     *         }
      *   }
      * )
      */
@@ -326,14 +360,7 @@ class TaskRunnerController extends AbstractController
         }
 
         if ($task::STATE_PENDING !== $task->getStatus()) {
-            return JsonResponse::create(
-                [
-                    'status' => $task->getStatus(),
-                    'type'   => $task->getType(),
-                    'task'   => $task->getId()
-                ],
-                JsonResponse::HTTP_OK
-            );
+            return $this->createJsonResponse([$this->convertTaskToArray($task)]);
         }
 
         // Now spawn a runner.
@@ -345,14 +372,7 @@ class TaskRunnerController extends AbstractController
             }
         }
 
-        return JsonResponse::create(
-            [
-                'status' => 'OK',
-                'type'   => $task->getType(),
-                'task'   => $task->getId()
-            ],
-            JsonResponse::HTTP_OK
-        );
+        return $this->createJsonResponse([$this->convertTaskToArray($task)]);
     }
 
     /**
@@ -398,5 +418,45 @@ class TaskRunnerController extends AbstractController
                 );
             }
         }
+    }
+
+    /**
+     * Convert a task to an array.
+     *
+     * @param Task $task
+     * @param null $outputOffset
+     *
+     * @return array
+     */
+    private function convertTaskToArray(Task $task, $outputOffset = null)
+    {
+        return [
+            'id'         => $task->getId(),
+            'status'     => $task->getStatus(),
+            'type'       => $task->getType(),
+            'created_at' => $task->getCreatedAt()->format(\DateTime::ISO8601),
+            'output'     => $task->getOutput($outputOffset)
+        ];
+    }
+
+    /**
+     * Create a JsonResponse based on an array of tasks.
+     *
+     * @param Task[] $tasks
+     * @param string $status
+     * @param int    $httpStatus
+     *
+     * @return JsonResponse
+     */
+    private function createJsonResponse(array $tasks, $status = 'OK', $httpStatus = JsonResponse::HTTP_OK)
+    {
+        $data = [
+            'status' => $status
+        ];
+        $key = 1 === count($tasks) ? 'task' : 'tasks';
+        $data[$key] = $tasks;
+
+        return JsonResponse::create($data, $httpStatus)
+            ->setEncodingOptions((JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_FORCE_OBJECT));
     }
 }
