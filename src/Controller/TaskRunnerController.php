@@ -74,10 +74,6 @@ class TaskRunnerController extends AbstractController
      *         "created_at" = {
      *           "dataType" = "string",
      *           "description" = "The date the task was created in ISO 8601 format."
-     *         },
-     *         "output" = {
-     *            "dataType" = "string",
-     *            "description" = "The command line output of the task."
      *         }
      *   }
      * )
@@ -165,7 +161,7 @@ class TaskRunnerController extends AbstractController
             $offset = (int) $request->query->get('offset');
         }
 
-        return $this->createJsonResponse([$this->convertTaskToArray($task, $offset)]);
+        return $this->createJsonResponse([$this->convertTaskToArray($task, true, $offset)]);
     }
 
     /**
@@ -209,10 +205,6 @@ class TaskRunnerController extends AbstractController
      *         "created_at" = {
      *           "dataType" = "string",
      *           "description" = "The date the task was created in ISO 8601 format."
-     *         },
-     *         "output" = {
-     *            "dataType" = "string",
-     *            "description" = "The command line output of the task."
      *         }
      *   }
      * )
@@ -337,10 +329,6 @@ class TaskRunnerController extends AbstractController
      *         "created_at" = {
      *           "dataType" = "string",
      *           "description" = "The date the task was created in ISO 8601 format."
-     *         },
-     *         "output" = {
-     *            "dataType" = "string",
-     *            "description" = "The command line output of the task."
      *         }
      *   }
      * )
@@ -429,15 +417,20 @@ class TaskRunnerController extends AbstractController
      *
      * @return array
      */
-    private function convertTaskToArray(Task $task, $outputOffset = null)
+    private function convertTaskToArray(Task $task, $addOutput = false, $outputOffset = null)
     {
-        return [
+        $data = [
             'id'         => $task->getId(),
             'status'     => $task->getStatus(),
             'type'       => $task->getType(),
-            'created_at' => $task->getCreatedAt()->format(\DateTime::ISO8601),
-            'output'     => $task->getOutput($outputOffset)
+            'created_at' => $task->getCreatedAt()->format(\DateTime::ISO8601)
         ];
+
+        if (true === $addOutput) {
+            $data['output'] = $task->getOutput($outputOffset);
+        }
+
+        return $data;
     }
 
     /**
