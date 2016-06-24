@@ -75,6 +75,7 @@ class TaskRunnerController extends AbstractController
      *           "dataType" = "string",
      *           "description" = "The date the task was created in ISO 8601 format."
      *         }
+     *      }
      *   }
      * )
      */
@@ -144,6 +145,7 @@ class TaskRunnerController extends AbstractController
      *            "dataType" = "string",
      *            "description" = "The command line output of the task."
      *         }
+     *      }
      *   }
      * )
      */
@@ -206,6 +208,7 @@ class TaskRunnerController extends AbstractController
      *           "dataType" = "string",
      *           "description" = "The date the task was created in ISO 8601 format."
      *         }
+     *      }
      *   }
      * )
      */
@@ -330,6 +333,7 @@ class TaskRunnerController extends AbstractController
      *           "dataType" = "string",
      *           "description" = "The date the task was created in ISO 8601 format."
      *         }
+     *      }
      *   }
      * )
      */
