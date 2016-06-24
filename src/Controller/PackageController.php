@@ -171,6 +171,10 @@ class PackageController extends AbstractController
      *             },
      *           }
      *         },
+     *         "extra" = {
+     *             "dataType" = "collection",
+     *             "description" = "The extra data from composer.json"
+     *         },
      *         "abandoned" = {
      *           "dataType" = "boolean",
      *           "description" = "Flag if this package is abandoned"
