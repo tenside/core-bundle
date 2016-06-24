@@ -451,7 +451,7 @@ class TaskRunnerController extends AbstractController
     {
         $data       = ['status' => $status];
         $key        = $isCollection ? 'tasks' : 'task';
-        $data[$key] = $tasks;
+        $data[$key] = $isCollection ? $tasks : $tasks[0];
 
         return JsonResponse::create($data, $httpStatus)
             ->setEncodingOptions((JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_FORCE_OBJECT));
