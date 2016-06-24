@@ -199,9 +199,6 @@ class PackageController extends AbstractController
             !$request->query->has('all'),
             $upgrades
         );
-        foreach ($packages->getEntries('/') as $packageName) {
-            $packages->set($packageName . '/installed', $packages->get($packageName . '/version'));
-        }
         $packages = $packages->getData();
         ksort($packages);
 
