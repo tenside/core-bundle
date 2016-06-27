@@ -21,9 +21,9 @@
 namespace Tenside\CoreBundle\Test\DependencyInjection\Factory;
 
 use Tenside\Core\Composer\ComposerJson;
+use Tenside\Core\Util\HomePathDeterminator;
 use Tenside\CoreBundle\DependencyInjection\Factory\ComposerJsonFactory;
 use Tenside\CoreBundle\Test\TestCase;
-use Tenside\CoreBundle\Util\HomePathDeterminator;
 
 /**
  * Test the composer.json factory.

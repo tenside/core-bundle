@@ -21,7 +21,7 @@
 namespace Tenside\CoreBundle\DependencyInjection\Factory;
 
 use Tenside\Core\Composer\ComposerJson;
-use Tenside\CoreBundle\Util\HomePathDeterminator;
+use Tenside\Core\Util\HomePathDeterminator;
 
 /**
  * This class creates a composerJson instance.

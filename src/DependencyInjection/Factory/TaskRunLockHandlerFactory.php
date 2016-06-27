@@ -21,7 +21,7 @@
 namespace Tenside\CoreBundle\DependencyInjection\Factory;
 
 use Symfony\Component\Filesystem\LockHandler;
-use Tenside\CoreBundle\Util\HomePathDeterminator;
+use Tenside\Core\Util\HomePathDeterminator;
 
 /**
  * This class creates a lock instance to be used when trying to run a task.

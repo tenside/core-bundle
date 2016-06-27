@@ -20,6 +20,8 @@
 
 namespace Tenside\CoreBundle\Util;
 
+use Tenside\Core\Util\HomePathDeterminator;
+
 /**
  * This class provides information about the current installation.
  */

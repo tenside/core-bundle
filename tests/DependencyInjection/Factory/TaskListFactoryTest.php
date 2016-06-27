@@ -22,9 +22,9 @@ namespace Tenside\CoreBundle\Test\DependencyInjection\Factory;
 
 use Tenside\Core\Task\TaskFactoryInterface;
 use Tenside\Core\Task\TaskList;
+use Tenside\Core\Util\HomePathDeterminator;
 use Tenside\CoreBundle\DependencyInjection\Factory\TaskListFactory;
 use Tenside\CoreBundle\Test\TestCase;
-use Tenside\CoreBundle\Util\HomePathDeterminator;
 
 /**
  * Test the task list factory.

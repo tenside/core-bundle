@@ -20,8 +20,8 @@
 
 namespace Tenside\CoreBundle\Test\Util;
 
+use Tenside\Core\Util\HomePathDeterminator;
 use Tenside\CoreBundle\Test\TestCase;
-use Tenside\CoreBundle\Util\HomePathDeterminator;
 use Tenside\CoreBundle\Util\InstallationStatusDeterminator;
 
 /**
@@ -36,7 +36,7 @@ class InstallationStatusDeterminatorTest extends TestCase
      */
     public function testEverythingIsFalseForEmptyDir()
     {
-        $home = $this->getMock('Tenside\\CoreBundle\\Util\\HomePathDeterminator', ['homeDir']);
+        $home = $this->getMock(HomePathDeterminator::class, ['homeDir']);
         $home->method('homeDir')->willReturn($this->getTempDir());
 
         /** @var HomePathDeterminator $home */
@@ -55,7 +55,7 @@ class InstallationStatusDeterminatorTest extends TestCase
      */
     public function testIsTensideConfigured()
     {
-        $home = $this->getMock('Tenside\\CoreBundle\\Util\\HomePathDeterminator', ['homeDir']);
+        $home = $this->getMock(HomePathDeterminator::class, ['homeDir']);
         $home->method('homeDir')->willReturn($this->getTempDir());
 
         /** @var HomePathDeterminator $home */
@@ -78,7 +78,7 @@ class InstallationStatusDeterminatorTest extends TestCase
      */
     public function testIsProjectPresent()
     {
-        $home = $this->getMock('Tenside\\CoreBundle\\Util\\HomePathDeterminator', ['homeDir']);
+        $home = $this->getMock(HomePathDeterminator::class, ['homeDir']);
         $home->method('homeDir')->willReturn($this->getTempDir());
 
         /** @var HomePathDeterminator $home */
@@ -101,7 +101,7 @@ class InstallationStatusDeterminatorTest extends TestCase
      */
     public function testIsProjectInstalled()
     {
-        $home = $this->getMock('Tenside\\CoreBundle\\Util\\HomePathDeterminator', ['homeDir']);
+        $home = $this->getMock(HomePathDeterminator::class, ['homeDir']);
         $home->method('homeDir')->willReturn($this->getTempDir());
 
         /** @var HomePathDeterminator $home */
@@ -125,7 +125,7 @@ class InstallationStatusDeterminatorTest extends TestCase
     public function testIsComplete()
     {
         $determinator = $this
-            ->getMockBuilder('Tenside\\CoreBundle\\Util\\InstallationStatusDeterminator')
+            ->getMockBuilder(InstallationStatusDeterminator::class)
             ->setMethods(['isTensideConfigured', 'isProjectPresent', 'isProjectInstalled'])
             ->disableOriginalConstructor()
             ->getMock();

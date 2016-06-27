@@ -25,8 +25,8 @@ use Composer\IO\IOInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Tenside\Core\Config\TensideJsonConfig;
 use Tenside\Core\Task\TaskList;
+use Tenside\Core\Util\HomePathDeterminator;
 use Tenside\CoreBundle\Controller\AbstractController;
-use Tenside\CoreBundle\Util\HomePathDeterminator;
 
 /**
  * Test the abstract controller.

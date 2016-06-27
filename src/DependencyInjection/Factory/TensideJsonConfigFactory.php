@@ -21,8 +21,8 @@
 namespace Tenside\CoreBundle\DependencyInjection\Factory;
 
 use Tenside\Core\Config\TensideJsonConfig;
+use Tenside\Core\Util\HomePathDeterminator;
 use Tenside\Core\Util\JsonFile;
-use Tenside\CoreBundle\Util\HomePathDeterminator;
 
 /**
  * This class creates a config instance.

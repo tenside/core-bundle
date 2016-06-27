@@ -22,7 +22,7 @@ namespace Tenside\CoreBundle\DependencyInjection\Factory;
 
 use Tenside\Core\Task\TaskFactoryInterface;
 use Tenside\Core\Task\TaskList;
-use Tenside\CoreBundle\Util\HomePathDeterminator;
+use Tenside\Core\Util\HomePathDeterminator;
 
 /**
  * This class creates a composerJson instance.

@@ -23,6 +23,7 @@ namespace Tenside\CoreBundle\Test\Controller;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Tenside\Core\Task\Composer\ComposerTaskFactory;
+use Tenside\Core\Util\HomePathDeterminator;
 use Tenside\CoreBundle\DependencyInjection\Factory\ComposerJsonFactory;
 use Tenside\CoreBundle\DependencyInjection\Factory\TaskListFactory;
 use Tenside\CoreBundle\DependencyInjection\Factory\TensideJsonConfigFactory;
@@ -54,7 +55,7 @@ class TestCase extends BaseTestCase
         }
 
         if (!$container->has('tenside.home')) {
-            $home = $this->getMock('Tenside\\CoreBundle\\Util\\HomePathDeterminator', ['homeDir']);
+            $home = $this->getMock(HomePathDeterminator::class, ['homeDir']);
             $home->method('homeDir')->willReturn($this->getTempDir());
             $container->set('tenside.home', $home);
         }
@@ -66,7 +67,7 @@ class TestCase extends BaseTestCase
         if (!$container->has('tenside.taskfactory')) {
             $container->set(
                 'tenside.taskfactory',
-                new ComposerTaskFactory($container->get('tenside.home')->homeDir())
+                new ComposerTaskFactory($container->get('tenside.home'))
             );
         }
 

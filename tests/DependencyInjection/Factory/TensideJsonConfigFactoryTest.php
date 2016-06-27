@@ -21,9 +21,9 @@
 namespace Tenside\CoreBundle\Test\DependencyInjection\Factory;
 
 use Tenside\Core\Config\TensideJsonConfig;
+use Tenside\Core\Util\HomePathDeterminator;
 use Tenside\CoreBundle\DependencyInjection\Factory\TensideJsonConfigFactory;
 use Tenside\CoreBundle\Test\TestCase;
-use Tenside\CoreBundle\Util\HomePathDeterminator;
 
 /**
  * Test the tenside.json factory.

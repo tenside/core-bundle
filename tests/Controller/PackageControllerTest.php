@@ -30,8 +30,8 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Tenside\Core\Composer\ComposerJson;
+use Tenside\Core\Util\HomePathDeterminator;
 use Tenside\CoreBundle\Controller\PackageController;
-use Tenside\CoreBundle\Util\HomePathDeterminator;
 
 /**
  * Test the abstract controller.

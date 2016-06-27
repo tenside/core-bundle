@@ -25,11 +25,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Tenside\Core\Task\Composer\InstallTask;
+use Tenside\Core\Util\HomePathDeterminator;
 use Tenside\Core\Util\JsonArray;
 use Tenside\Core\Util\JsonFile;
 use Tenside\CoreBundle\Controller\InstallProjectController;
 use Tenside\Core\Config\TensideJsonConfig;
-use Tenside\CoreBundle\Util\HomePathDeterminator;
 use Tenside\CoreBundle\Util\InstallationStatusDeterminator;
 
 /**

@@ -21,9 +21,9 @@
 namespace Tenside\CoreBundle\Test\DependencyInjection\Factory;
 
 use Symfony\Component\Filesystem\LockHandler;
+use Tenside\Core\Util\HomePathDeterminator;
 use Tenside\CoreBundle\DependencyInjection\Factory\TaskRunLockHandlerFactory;
 use Tenside\CoreBundle\Test\TestCase;
-use Tenside\CoreBundle\Util\HomePathDeterminator;
 
 /**
  * Test the composer.json factory.
