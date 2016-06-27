@@ -126,7 +126,7 @@ EOF
         $result = json_decode($response->getContent(), true);
         $this->assertNotEmpty($result['errors']);
         $this->assertEquals('ERROR', $result['status']);
-        $this->assertEquals('2', $result['errors'][0]['line']);
+        $this->assertEquals('2', $result['errors'][0]['line'], 'Line mismatch in ' . $response->getContent());
     }
 
     /**
