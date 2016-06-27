@@ -55,7 +55,7 @@ class UserProviderFromConfig implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        if (!$this->configSource->has('auth-password/' . $username)) {
+        if (!($username && $this->configSource->has('auth-password/' . $username))) {
             throw new UsernameNotFoundException();
         }
 

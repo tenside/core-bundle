@@ -60,6 +60,20 @@ class UserProviderFromConfigTest extends TestCase
     }
 
     /**
+     * Test that an empty username does not load any users.
+     *
+     * @return void
+     *
+     * @expectedException \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
+     */
+    public function testEmptyUsernameThrowsException()
+    {
+        $provider = new UserProviderFromConfig(new SourceJson(new JsonFile($this->getTempFile('tenside.json'))));
+
+        $provider->loadUserByUsername('');
+    }
+
+    /**
      * Test the whole functionality.
      *
      * @return void
