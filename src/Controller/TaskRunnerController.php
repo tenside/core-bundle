@@ -82,7 +82,7 @@ class TaskRunnerController extends AbstractController
     public function getTasksAction()
     {
         $tasks = [];
-        $list   = $this->getTensideTasks();
+        $list  = $this->getTensideTasks();
         foreach ($list->getIds() as $taskId) {
             $tasks[$taskId] = $this->convertTaskToArray($list->getTask($taskId));
         }
@@ -416,8 +416,11 @@ class TaskRunnerController extends AbstractController
     /**
      * Convert a task to an array.
      *
-     * @param Task $task
-     * @param null $outputOffset
+     * @param Task $task         The task to convert.
+     *
+     * @param bool $addOutput    Flag determining if the output shall get added or not.
+     *
+     * @param null $outputOffset The output offset to use.
      *
      * @return array
      */
@@ -440,15 +443,22 @@ class TaskRunnerController extends AbstractController
     /**
      * Create a JsonResponse based on an array of tasks.
      *
-     * @param Task[] $tasks
-     * @param bool   $isCollection
-     * @param string $status
-     * @param int    $httpStatus
+     * @param array[] $tasks        The task data.
+     *
+     * @param bool    $isCollection Flag if the data is a task collection.
+     *
+     * @param string  $status       Status code string.
+     *
+     * @param int     $httpStatus   HTTP Status to send.
      *
      * @return JsonResponse
      */
-    private function createJsonResponse(array $tasks, $isCollection = false, $status = 'OK', $httpStatus = JsonResponse::HTTP_OK)
-    {
+    private function createJsonResponse(
+        array $tasks,
+        $isCollection = false,
+        $status = 'OK',
+        $httpStatus = JsonResponse::HTTP_OK
+    ) {
         $data       = ['status' => $status];
         $key        = $isCollection ? 'tasks' : 'task';
         $data[$key] = $isCollection ? $tasks : $tasks[0];
