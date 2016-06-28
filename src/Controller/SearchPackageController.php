@@ -64,11 +64,6 @@ class SearchPackageController extends AbstractController
      *      "description" = "The name of the project to search or any other keyword.",
      *      "required" = true
      *    },
-     *    "version" = {
-     *      "dataType" = "string",
-     *      "description" = "The name of the project to install.",
-     *      "required" = false
-     *    },
      *    "type" = {
      *      "dataType" = "choice",
      *      "description" = "The type of package to search (optional, default: all).",
