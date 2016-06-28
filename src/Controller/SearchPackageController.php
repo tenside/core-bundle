@@ -91,6 +91,10 @@ class SearchPackageController extends AbstractController
      *           "dataType" = "string",
      *           "description" = "The name of the package"
      *         },
+     *         "version" = {
+     *           "dataType" = "string",
+     *           "description" = "The version of the package"
+     *         },
      *         "constraint" = {
      *           "dataType" = "string",
      *           "description" = "The constraint of the package (when package is installed)"
