@@ -62,7 +62,8 @@ class TensideApiDocHandler implements HandlerInterface
             foreach ($description->getRequest() as $name => $field) {
                 $request[$name] = $this->convertField($field);
             }
-            $annotation->setParameters($request);
+
+            $annotation->setParameters(array_merge($annotation->getParameters(), $request));
 
             if (!isset($current['response'])) {
                 $response = [];
