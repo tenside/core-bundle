@@ -144,6 +144,25 @@ class AuthControllerTest extends TestCase
     }
 
     /**
+     * Test authorized response for valid user data with unlimited ttl.
+     *
+     * @return void
+     */
+    public function testPostValidCredentialsWithUnlimitedTtl()
+    {
+        $response = $this->handleAuth(new UserInformation(['acl' => 7, 'username' => 'foobar']), -1);
+        $result   = json_decode($response->getContent(), true);
+        $this->assertArrayHasKey('status', $result);
+        $this->assertArrayHasKey('token', $result);
+        $this->assertArrayHasKey('acl', $result);
+        $this->assertArrayHasKey('username', $result);
+        $this->assertEquals('OK', $result['status']);
+        $this->assertEquals('foobar', $result['username']);
+        $this->assertEquals(200, $response->getStatusCode());
+
+    }
+
+    /**
      * Test that an invalid user object raises an exception.
      *
      * @return void

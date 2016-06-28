@@ -24,6 +24,7 @@ namespace Tenside\CoreBundle\Controller;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Tenside\Core\Util\JsonArray;
 use Tenside\CoreBundle\Annotation\ApiDescription;
 use Tenside\CoreBundle\Security\UserInformationInterface;
 
@@ -88,10 +89,7 @@ class AuthController extends AbstractController
                 throw new \RuntimeException('Invalid user object');
             }
 
-            $lifetime = $request->get('ttl', 3600);
-            if (-1 === $lifetime) {
-                $lifetime = null;
-            }
+            $lifetime = $this->determineLifeTime($request);
 
             $token = $this->get('tenside.jwt_authenticator')->getTokenForData($user, $lifetime);
             return new JsonResponse(
@@ -108,5 +106,49 @@ class AuthController extends AbstractController
         }
 
         return new JsonResponse(['status' => 'unauthorized'], JsonResponse::HTTP_UNAUTHORIZED);
+    }
+
+    /**
+     * Determine the life time for the token.
+     *
+     * This examines the GET parameters if a field "ttl" has been set.
+     * If not, it examines the JSON post data for a field named ttl.
+     *
+     * @param Request $request The request.
+     *
+     * @return int|null
+     */
+    private function determineLifeTime(Request $request)
+    {
+        if ($lifetime = $request->query->getInt('ttl')) {
+            return $this->revertToNullOnMinusOne($lifetime);
+        }
+
+        try {
+            $inputData = new JsonArray($request->getContent());
+            if ($inputData->has('ttl')) {
+                return $this->revertToNullOnMinusOne(intval($inputData->get('ttl')));
+            }
+        } catch (\Exception $e) {
+            // Swallow exception, we need to return a defined result.
+        }
+
+        return 3600;
+    }
+
+    /**
+     * Return the value if it is different than -1, null otherwise.
+     *
+     * @param int $lifetime The life time.
+     *
+     * @return null|int
+     */
+    private function revertToNullOnMinusOne($lifetime)
+    {
+        if (-1 === $lifetime) {
+            return null;
+        }
+
+        return $lifetime;
     }
 }
