@@ -48,12 +48,25 @@ class AuthController extends AbstractController
      *     200 = "When everything worked out ok",
      *     401 = "When the request was unauthorized."
      *   },
-     *   filters = {
+     *   parameters = {
      *     {
      *       "name": "ttl",
-     *       "dataType" = "int",
+     *       "dataType" = "string",
+     *       "format" = "\d+",
      *       "description" = "The amount of seconds the token shall be valid or -1 for unlimited (default: 3600).",
      *       "required" = false
+     *     },
+     *     {
+     *       "name": "username",
+     *       "dataType" = "string",
+     *       "description" = "The username.",
+     *       "required" = true
+     *     },
+     *     {
+     *       "name": "password",
+     *       "dataType" = "string",
+     *       "description" = "The pssword.",
+     *       "required" = true
      *     }
      *   }
      * )
