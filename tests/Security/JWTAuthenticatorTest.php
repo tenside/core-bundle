@@ -241,6 +241,38 @@ class JWTAuthenticatorTest extends TestCase
     }
 
     /**
+     * Test successful token creation without ttl.
+     *
+     * @return void
+     */
+    public function testCreateTokenSuccessWithUnlimitedLifetime()
+    {
+        $config = new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json'));
+        $config->set('secret', 'very-secret-secret');
+
+        $user = $this
+            ->getMockBuilder(UserInformationInterface::class)
+            ->setMethods(['values'])
+            ->getMockForAbstractClass();
+
+        $auth  = new JWTAuthenticator($config);
+        $token = $auth->getTokenForData($user, null);
+
+        $request = Request::create('https://example.com/');
+        $request->headers->set('Authorization', 'Bearer ' . $token);
+
+        $this->assertInstanceOf(
+            JavascriptWebToken::class,
+            $tokenObject = $auth->createToken($request, 'provider-key')
+        );
+
+        $this->assertEquals('provider-key', $tokenObject->getProviderKey());
+        $this->assertTrue(property_exists($tokenObject->getCredentials(), 'jti'));
+        $this->assertTrue(property_exists($tokenObject->getCredentials(), 'iat'));
+        $this->assertFalse(property_exists($tokenObject->getCredentials(), 'exp'));
+    }
+
+    /**
      * Test successful token creation.
      *
      * @return void
