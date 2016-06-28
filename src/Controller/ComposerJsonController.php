@@ -119,7 +119,14 @@ class ComposerJsonController extends AbstractController
     public function putComposerJsonAction(Request $request)
     {
         $content = $request->getContent();
-        $errors  = $this->checkComposerJson($content);
+        try {
+            $errors = $this->checkComposerJson($content);
+        } catch (\Exception $e) {
+            $errors = [
+                'errors'   => [['line' => 0, 'msg' => 'Invalid payload']],
+                'warnings' => [],
+            ];
+        }
 
         if (!empty($errors['errors'])) {
             $errors['status'] = 'ERROR';
