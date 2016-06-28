@@ -170,7 +170,11 @@ class AppKernelController extends AbstractController
 
         if (!$process->isSuccessful()) {
             $output = $process->getErrorOutput() . PHP_EOL . $process->getOutput();
-            if ((bool) preg_match('/Parse error:\s*syntax error,(.+?)\s+in\s+.+?\s*line\s+(\d+)/', $output, $match)) {
+            if ((bool) preg_match(
+                '/(?:Parse|Fatal) error:\s*syntax error,(.+?)\s+in\s+.+?\s*line\s+(\d+)/',
+                $output,
+                $match
+            )) {
                 return [
                     'errors' => [
                         [
