@@ -30,11 +30,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Tenside\CoreBundle\Security\PermissionVoter;
 use Tenside\CoreBundle\Security\UserInformation;
 use Tenside\CoreBundle\Security\UserInformationInterface;
+use Tenside\CoreBundle\Test\TestCase;
 
 /**
  * Test the application.
  */
-class PermissionVoterTest extends \PHPUnit_Framework_TestCase
+class PermissionVoterTest extends TestCase
 {
     /**
      * Mock a request for a route.
@@ -68,7 +69,7 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
             ->getMockForAbstractClass();
         $router->method('getRouteCollection')->willReturn($collection);
 
-        return new PermissionVoter($router, $stack);
+        return new PermissionVoter($router, $stack, ['debug' => false, 'cache_dir' => $this->getTempDir()]);
     }
 
     /**
@@ -116,7 +117,8 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
     {
         $voter = new PermissionVoter(
             $this->getMockForAbstractClass(RouterInterface::class),
-            $this->getMockForAbstractClass(RequestStack::class)
+            $this->getMockForAbstractClass(RequestStack::class),
+            ['debug' => false, 'cache_dir' => $this->getTempDir()]
         );
 
         $this->assertInstanceOf(PermissionVoter::class, $voter);

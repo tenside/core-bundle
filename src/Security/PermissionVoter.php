@@ -20,8 +20,12 @@
 
 namespace Tenside\CoreBundle\Security;
 
+use Symfony\Component\Config\ConfigCacheFactory;
+use Symfony\Component\Config\ConfigCacheFactoryInterface;
+use Symfony\Component\Config\ConfigCacheInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -29,7 +33,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 /**
  * This class checks the permissions of the authenticated user against the current request.
  */
-class PermissionVoter implements VoterInterface
+class PermissionVoter implements VoterInterface, WarmableInterface
 {
     /**
      * The router.
@@ -46,16 +50,31 @@ class PermissionVoter implements VoterInterface
     private $requestStack;
 
     /**
+     * The options.
+     *
+     * @var array
+     */
+    protected $options = array();
+
+    /**
+     * The config cache.
+     *
+     * @var ConfigCacheFactoryInterface|null
+     */
+    private $configCacheFactory;
+
+    /**
      * Create a new instance.
      *
      * @param RouterInterface $router       The router component.
      *
      * @param RequestStack    $requestStack The request stack.
      */
-    public function __construct(RouterInterface $router, RequestStack $requestStack)
+    public function __construct(RouterInterface $router, RequestStack $requestStack, $options)
     {
         $this->router       = $router;
         $this->requestStack = $requestStack;
+        $this->options      = $options;
     }
 
     /**
@@ -87,12 +106,7 @@ class PermissionVoter implements VoterInterface
             return VoterInterface::ACCESS_ABSTAIN;
         }
 
-        if (!(($request = $object) instanceof Request)) {
-            $request = $this->requestStack->getCurrentRequest();
-        }
-
-        $route        = $this->router->getRouteCollection()->get($request->get('_route'));
-        $requiredRole = $route->getOption('required_role');
+        $requiredRole = $this->getRequiredRole($object);
 
         if (null === $requiredRole) {
             return VoterInterface::ACCESS_ABSTAIN;
@@ -114,6 +128,20 @@ class PermissionVoter implements VoterInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function warmUp($cacheDir)
+    {
+        $currentDir = $this->options['cache_dir'];
+
+        // force cache generation
+        $this->options['cache_dir'] = $cacheDir;
+        $this->getRouteRoles();
+
+        $this->options['cache_dir'] = $currentDir;
+    }
+
+    /**
      * Test if we support any of the attributes.
      *
      * @param string[] $attributes The attributes to test.
@@ -129,5 +157,68 @@ class PermissionVoter implements VoterInterface
         }
 
         return false;
+    }
+
+    /**
+     * Provides the ConfigCache factory implementation, falling back to a default implementation if necessary.
+     *
+     * @return ConfigCacheFactoryInterface $configCacheFactory
+     */
+    private function getConfigCacheFactory()
+    {
+        if (null === $this->configCacheFactory) {
+            $this->configCacheFactory = new ConfigCacheFactory($this->options['debug']);
+        }
+
+        return $this->configCacheFactory;
+    }
+
+    /**
+     * Get the required roles from cache if possible.
+     *
+     * @return array
+     */
+    private function getRouteRoles()
+    {
+        $router = $this->router;
+
+        $cache = $this->getConfigCacheFactory()->cache(
+            $this->options['cache_dir'].'/tenside_roles.php',
+            function (ConfigCacheInterface $cache) use ($router) {
+                $routes = $router->getRouteCollection();
+                $roles  = [];
+                foreach ($routes as $name => $route) {
+                    if ($requiredRole = $route->getOption('required_role')) {
+                        $roles[$name] = $requiredRole;
+                    }
+                }
+
+                $cache->write('<?php return ' . var_export($roles, true) . ';', $routes->getResources());
+            }
+        );
+
+        return require_once $cache->getPath();
+    }
+
+    /**
+     * Retrieve the required role for the current request (if any).
+     *
+     * @param mixed $object The object passed to the voter.
+     *
+     * @return string|null
+     */
+    private function getRequiredRole($object)
+    {
+        if (!(($request = $object) instanceof Request)) {
+            $request = $this->requestStack->getCurrentRequest();
+        }
+
+        $routes = $this->getRouteRoles();
+
+        if (isset($routes[$request->get('_route')])) {
+            return $routes[$request->get('_route')];
+        }
+
+        return null;
     }
 }
