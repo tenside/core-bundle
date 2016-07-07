@@ -50,7 +50,6 @@ services:
 
     tenside.taskfactory:
         class:     Tenside\Core\Task\CompositeTaskFactory
-# FIXME: add compiler pass and collect the factories in there/add them to taskfactory then.
     tenside.taskfactory.composer:
         class:     Tenside\Core\Task\Composer\ComposerTaskFactory
         arguments: ["@tenside.home"]
