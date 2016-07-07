@@ -34,12 +34,11 @@
     "symfony/security-http": "~3.0",
     "symfony/routing": "~3.0",
     "symfony/yaml": "~3.0",
-    "tenside/core": "~1.0"
+    "tenside/core": "~1.0@dev"
   },
   "require-dev": {
     "phpcq/all-tasks": "~1.1",
     "nelmio/api-doc-bundle": "~2.10",
-    "composer/composer": "~1.0@dev",
     "symfony/expression-language": "~2.8"
   },
   "suggest": {
@@ -59,6 +58,5 @@
     "branch-alias": {
       "dev-master": "1.0-dev"
     }
-  },
-  "minimum-stability": "dev"
+  }
 }
