@@ -1,7 +1,7 @@
 services:
     tenside.home:
         class:  Tenside\Core\Util\HomePathDeterminator
-        public: true
+        public: false
 
     tenside.status:
         class:     Tenside\CoreBundle\Util\InstallationStatusDeterminator
