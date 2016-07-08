@@ -52,44 +52,13 @@ class RunTaskCommand extends ContainerAwareCommand
      */
     public function run(InputInterface $input, OutputInterface $output)
     {
-        $container = $this->getContainer();
-        /** @var LoggerInterface $logger */
-        $logger = $container->get('logger');
-
         // If successfully forked, exit now as the parenting process is done.
         if ($this->fork()) {
             $output->writeln('Forked into background.');
             return 0;
         }
 
-        $lock = $container->get('tenside.taskrun_lock');
-        $logger->info('Acquire lock file.');
-
-        if (!$lock->lock()) {
-            $locked = false;
-            $retry  = 3;
-            // Try up to 3 times to acquire with short delay in between.
-            while ($retry > 0) {
-                usleep(1000);
-                if ($locked = $lock->lock()) {
-                    break;
-                }
-                $retry--;
-            }
-            if (!$locked) {
-                $logger->error('Could not acquire lock file.');
-                throw new \RuntimeException(
-                    'Another task appears to be running. If this is not the case, please remove the lock file.'
-                );
-            }
-        }
-
-        try {
-            return parent::run($input, $output);
-        } finally {
-            $logger->info('Release lock file.');
-            $lock->release();
-        }
+        return parent::run($input, $output);
     }
 
     /**
@@ -107,24 +76,11 @@ class RunTaskCommand extends ContainerAwareCommand
             throw new \InvalidArgumentException('Task not found: ' . $input->getArgument('taskId'));
         }
 
-        $runner = new Runner($task);
+        $runner = new Runner($task, $container->get('tenside.taskrun_lock'), $container->get('logger'));
 
-        try {
-            if (!$runner->run(
-                $container->get('kernel')->getLogDir() . DIRECTORY_SEPARATOR . 'task-' . $task->getId() . '.log'
-            )) {
-                $container->get('logger')->error($task->getOutput());
-
-                return 1;
-            }
-        } catch (\Exception $exception) {
-            $container->get('logger')->error($exception->getMessage());
-            $container->get('logger')->error($task->getOutput());
-
-            throw $exception;
-        }
-
-        return 0;
+        return $runner->run(
+            $container->get('kernel')->getLogDir() . DIRECTORY_SEPARATOR . 'task-' . $task->getId() . '.log'
+        ) ? 0 : 1;
     }
 
     /**
