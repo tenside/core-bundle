@@ -291,7 +291,7 @@ class Application extends SymfonyApplication
     /**
      * {@inheritDoc}
      */
-    public function renderException($exception, $output)
+    public function renderException(\Exception $exception, OutputInterface $output)
     {
         // Preserve plain echoing to console...
         parent::renderException($exception, $output);
