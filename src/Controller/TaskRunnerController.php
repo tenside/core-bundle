@@ -391,6 +391,7 @@ class TaskRunnerController extends AbstractController
             ]
         );
 
+        $this->get('logger')->debug('SPAWN CLI: ' . $commandline->getCommandLine());
         $commandline->start();
         if (!$commandline->isRunning()) {
             // We might end up here when the process has been forked.
