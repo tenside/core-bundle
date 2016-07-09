@@ -45,6 +45,7 @@ services:
         class:     Tenside\CoreBundle\EventListener\ExceptionListener
         arguments:
           logger:  "@logger"
+          debug: "%kernel.debug%"
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
 

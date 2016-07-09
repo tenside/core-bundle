@@ -46,13 +46,23 @@ class ExceptionListener
     private $logger;
 
     /**
+     * The debug flag.
+     *
+     * @var bool
+     */
+    private $debug;
+
+    /**
      * Create a new instance.
      *
      * @param LoggerInterface $logger The logger.
+     *
+     * @param bool            $debug  The debug flag.
      */
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, $debug = false)
     {
         $this->logger = $logger;
+        $this->debug  = $debug;
     }
 
     /**
@@ -178,12 +188,91 @@ class ExceptionListener
 
         $this->logger->error($message, array('exception' => $exception));
 
-        return new JsonResponse(
-            [
-                'status'  => 'ERROR',
-                'message' => JsonResponse::$statusTexts[JsonResponse::HTTP_INTERNAL_SERVER_ERROR]
-            ],
-            JsonResponse::HTTP_INTERNAL_SERVER_ERROR
-        );
+        $response = [
+            'status'  => 'ERROR',
+            'message' => JsonResponse::$statusTexts[JsonResponse::HTTP_INTERNAL_SERVER_ERROR]
+        ];
+
+        if ($this->debug) {
+            $response['exception'] = $this->formatException($exception);
+        }
+
+        return new JsonResponse($response, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Format an exception (and enclosed child exceptions) as array for a JSON response.
+     *
+     * @param \Exception $exception The exception to format.
+     *
+     * @return array
+     */
+    private function formatException(\Exception $exception)
+    {
+        $result = [
+            'message' => $exception->getMessage(),
+            'type'      => get_class($exception),
+            'code'      => $exception->getCode(),
+            'trace' => [
+                [
+                    'file' => $exception->getFile() ?: 'unknown',
+                    'line' => $exception->getLine() ?: 'unknown',
+                ]
+            ]
+        ];
+
+        foreach ($exception->getTrace() as $frame) {
+            $result['trace'][] = $this->formatStackFrame($frame);
+        }
+
+        if ($previous = $exception->getPrevious()) {
+            $result['previous'] = $this->formatException($previous);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Convert a stack frame to array.
+     *
+     * @param array $frame The stack frame to convert.
+     *
+     * @return array
+     */
+    private function formatStackFrame($frame)
+    {
+        return [
+            'file'      => isset($frame['file']) ? $frame['file'] : 'unknown',
+            'line'      => isset($frame['line']) ? $frame['line'] : 'unknown',
+            'function'  => (isset($frame['class']) ? $frame['class'] . $frame['type'] : '') . $frame['function'],
+            'arguments' => $this->formatArguments($frame['args'])
+        ];
+    }
+
+    /**
+     * Reformat an argument list.
+     *
+     * @param array $arguments The arguments to reformat.
+     *
+     * @return mixed
+     */
+    private function formatArguments($arguments)
+    {
+        $result = [];
+        foreach ($arguments as $key => $argument) {
+            if (is_object($argument)) {
+                $result[$key] = get_class($argument);
+                continue;
+            }
+
+            if (is_array($argument)) {
+                $result[$key] = $this->formatArguments($argument);
+                continue;
+            }
+
+            $result[$key] = $argument;
+        }
+
+        return $result;
     }
 }
