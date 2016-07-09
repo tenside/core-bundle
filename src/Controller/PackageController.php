@@ -22,8 +22,10 @@
 namespace Tenside\CoreBundle\Controller;
 
 use Composer\Package\AliasPackage;
+use Composer\Package\Loader\ArrayLoader;
 use Composer\Package\PackageInterface;
 use Composer\Repository\RepositoryInterface;
+use Composer\Repository\WritableArrayRepository;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,6 +33,7 @@ use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Tenside\Core\Composer\PackageConverter;
 use Tenside\Core\Util\JsonArray;
+use Tenside\Core\Util\JsonFile;
 use Tenside\CoreBundle\Annotation\ApiDescription;
 
 /**
@@ -193,14 +196,12 @@ class PackageController extends AbstractController
     {
         $composer  = $this->getComposer();
         $converter = new PackageConverter($composer->getPackage());
-        $upgrades  = null;
-
-        $packages = $converter->convertRepositoryToArray(
+        $upgrades  = $this->getUpgradeRepository();
+        $packages  = $converter->convertRepositoryToArray(
             $composer->getRepositoryManager()->getLocalRepository(),
             !$request->query->has('all'),
             $upgrades
-        );
-        $packages = $packages->getData();
+        )->getData();
         ksort($packages);
 
         return new JsonResponse($packages, 200);
@@ -568,5 +569,29 @@ class PackageController extends AbstractController
         }
 
         return $packages[0];
+    }
+
+    /**
+     * Load a repository containing available upgrades.
+     *
+     * @return null|RepositoryInterface
+     */
+    private function getUpgradeRepository()
+    {
+        $upgradeFile = $this->get('tenside.home')->tensideDataDir() . DIRECTORY_SEPARATOR . 'upgrades.json';
+        if (!file_exists($upgradeFile)) {
+            return null;
+        }
+
+        $packageLoader  = new ArrayLoader();
+        $packageChanges = new WritableArrayRepository();
+        $upgrades       = new JsonFile($upgradeFile, null);
+        foreach ($upgrades->getEntries('/') as $packageName) {
+            if ($pkgData = $upgrades->get($packageName . '/target')) {
+                $packageChanges->addPackage($packageLoader->load($pkgData));
+            }
+        }
+
+        return $packageChanges;
     }
 }
