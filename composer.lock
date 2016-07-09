@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "38631b567d0f234e958fe93dd27e2c4a",
-    "content-hash": "7a0a25606db79868ef7390a02302c6cb",
+    "hash": "0054c97df4a6c1c52b8d0f386c25cb38",
+    "content-hash": "f31e27627e708f40b7ab121f072b243d",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -2591,12 +2591,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tenside/core.git",
-                "reference": "f11a34a8c31d0211d896b6cc280f407b189a1529"
+                "reference": "c53edc70b91ee0cbf19ba3019acfb56185841610"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tenside/core/zipball/f11a34a8c31d0211d896b6cc280f407b189a1529",
-                "reference": "f11a34a8c31d0211d896b6cc280f407b189a1529",
+                "url": "https://api.github.com/repos/tenside/core/zipball/c53edc70b91ee0cbf19ba3019acfb56185841610",
+                "reference": "c53edc70b91ee0cbf19ba3019acfb56185841610",
                 "shasum": ""
             },
             "require": {
@@ -2605,7 +2605,7 @@
                 "ext-openssl": "*",
                 "ext-zip": "*",
                 "firebase/php-jwt": "~2.2",
-                "php": ">=5.5",
+                "php": ">=5.6",
                 "symfony/console": "~3.0",
                 "symfony/finder": "~3.0",
                 "symfony/http-foundation": "~3.0",
@@ -2643,7 +2643,7 @@
                 "dependency",
                 "package"
             ],
-            "time": "2016-07-07 17:22:39"
+            "time": "2016-07-09 05:58:05"
         }
     ],
     "packages-dev": [
@@ -5190,7 +5190,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.5",
+        "php": ">=5.6",
         "ext-zip": "*",
         "ext-openssl": "*"
     },
