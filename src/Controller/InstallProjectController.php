@@ -190,8 +190,8 @@ class InstallProjectController extends AbstractController
     public function createProjectAction(Request $request)
     {
         $status = $this->get('tenside.status');
-        if ($status->isProjectPresent() || $status->isProjectInstalled()) {
-            throw new NotAcceptableHttpException('Already configured.');
+        if (!$status->isTensideConfigured()) {
+            throw new NotAcceptableHttpException('Need to configure first.');
         }
 
         $this->checkUninstalled();

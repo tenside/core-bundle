@@ -244,6 +244,21 @@ class InstallProjectControllerTest extends TestCase
     }
 
     /**
+     * Tests the create project when not yet configured.
+     *
+     * @return void
+     *
+     * @expectedException \Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException
+     */
+    public function testNotYetConfiguredException()
+    {
+        $controller = new InstallProjectController();
+        $controller->setContainer($this->createDefaultContainer());
+
+        $controller->createProjectAction(new Request());
+    }
+
+    /**
      * Tests the create project action.
      *
      * @return void
