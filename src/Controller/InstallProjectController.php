@@ -198,7 +198,7 @@ class InstallProjectController extends AbstractController
         $result = [];
         $header = [];
 
-        $installDir = $this->get('tenside.home')->homeDir();
+        $installDir = $this->getTensideHome();
         $inputData  = new JsonArray($request->getContent());
         $taskData   = new JsonArray();
 
@@ -472,7 +472,7 @@ class InstallProjectController extends AbstractController
     private function checkUninstalled()
     {
         if ($this->get('tenside.status')->isComplete()) {
-            throw new NotAcceptableHttpException('Already installed in ' . $this->get('tenside.home')->homeDir());
+            throw new NotAcceptableHttpException('Already installed in ' . $this->getTensideHome());
         }
     }
 }

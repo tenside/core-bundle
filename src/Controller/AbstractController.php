@@ -107,6 +107,16 @@ abstract class AbstractController extends Controller
     }
 
     /**
+     * Retrieve the tenside instance.
+     *
+     * @return string
+     */
+    public function getTensideDataDir()
+    {
+        return $this->container->get('tenside.home')->tensideDataDir();
+    }
+
+    /**
      * Retrieve the tenside task list.
      *
      * @return TaskList

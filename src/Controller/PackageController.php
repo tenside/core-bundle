@@ -578,7 +578,7 @@ class PackageController extends AbstractController
      */
     private function getUpgradeRepository()
     {
-        $upgradeFile = $this->get('tenside.home')->tensideDataDir() . DIRECTORY_SEPARATOR . 'upgrades.json';
+        $upgradeFile = $this->getTensideDataDir() . DIRECTORY_SEPARATOR . 'upgrades.json';
         if (!file_exists($upgradeFile)) {
             return null;
         }

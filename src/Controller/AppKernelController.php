@@ -158,7 +158,7 @@ class AppKernelController extends AbstractController
 
         $config = $this->getTensideConfig();
 
-        $home    = $this->get('tenside.home')->homeDir();
+        $home    = $this->getTensideHome();
         $process = PhpProcessSpawner::create($config, $home)->spawn(
             [
                 '-l',

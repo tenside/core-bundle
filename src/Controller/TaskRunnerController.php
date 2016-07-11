@@ -380,7 +380,7 @@ class TaskRunnerController extends AbstractController
     private function spawn(Task $task)
     {
         $config      = $this->getTensideConfig();
-        $home        = $this->get('tenside.home')->homeDir();
+        $home        = $this->getTensideHome();
         $commandline = PhpProcessSpawner::create($config, $home)->spawn(
             [
                 $this->get('tenside.cli_script')->cliExecutable(),
