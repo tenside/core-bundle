@@ -333,4 +333,68 @@ class ExceptionListenerTest extends TestCase
         $this->assertEquals('ERROR', $content['status']);
         $this->assertEquals($exception->getMessageKey(), $content['message']);
     }
+
+    /**
+     * Test that a LogicException is rendered as internal server error.
+     *
+     * @return void
+     */
+    public function testOnKernelExceptionDoesNotIncludeStackWithoutDebug()
+    {
+        $previous  = new \Exception('Broken!');
+        $exception = new \LogicException('logical? Yes it isn\'t!', 0, $previous);
+
+        $event = $this
+            ->getMockBuilder(GetResponseForExceptionEvent::class)
+            ->setMethods(['getRequest', 'getException'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $event->method('getException')->willReturn($exception);
+
+        /** @var GetResponseForExceptionEvent $event */
+
+        $listener = new ExceptionListener(new NullLogger());
+        $listener->onKernelException($event);
+        $response = $event->getResponse();
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(JsonResponse::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
+        $content = json_decode($response->getContent(), true);
+        $this->assertEquals('ERROR', $content['status']);
+        $this->assertEquals(JsonResponse::$statusTexts[JsonResponse::HTTP_INTERNAL_SERVER_ERROR], $content['message']);
+        $this->assertEquals('logical? Yes it isn\'t!', $content['exception']['message']);
+        $this->assertEquals('Broken!', $content['exception']['previous']['message']);
+    }
+
+    /**
+     * Test that a LogicException is rendered as internal server error.
+     *
+     * @return void
+     */
+    public function testOnKernelExceptionIncludesStackInDebug()
+    {
+        $previous  = new \Exception('Broken!');
+        $exception = new \LogicException('logical? Yes it isn\'t!', 0, $previous);
+
+        $event = $this
+            ->getMockBuilder(GetResponseForExceptionEvent::class)
+            ->setMethods(['getRequest', 'getException'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $event->method('getException')->willReturn($exception);
+
+        /** @var GetResponseForExceptionEvent $event */
+
+        $listener = new ExceptionListener(new NullLogger(), true);
+        $listener->onKernelException($event);
+        $response = $event->getResponse();
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(JsonResponse::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
+        $content = json_decode($response->getContent(), true);
+        $this->assertEquals('ERROR', $content['status']);
+        $this->assertEquals(JsonResponse::$statusTexts[JsonResponse::HTTP_INTERNAL_SERVER_ERROR], $content['message']);
+        $this->assertEquals('logical? Yes it isn\'t!', $content['exception']['message']);
+        $this->assertEquals('Broken!', $content['exception']['previous']['message']);
+    }
 }
