@@ -362,8 +362,7 @@ class ExceptionListenerTest extends TestCase
         $content = json_decode($response->getContent(), true);
         $this->assertEquals('ERROR', $content['status']);
         $this->assertEquals(JsonResponse::$statusTexts[JsonResponse::HTTP_INTERNAL_SERVER_ERROR], $content['message']);
-        $this->assertEquals('logical? Yes it isn\'t!', $content['exception']['message']);
-        $this->assertEquals('Broken!', $content['exception']['previous']['message']);
+        $this->assertArrayNotHasKey('exception', $content);
     }
 
     /**
