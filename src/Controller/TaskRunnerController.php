@@ -178,7 +178,8 @@ class TaskRunnerController extends AbstractController
      * @ApiDoc(
      *   section="tasks",
      *   statusCodes = {
-     *     201 = "When everything worked out ok"
+     *     201 = "When everything worked out ok",
+     *     406 = "When the payload is invalid"
      *   },
      *   authentication = true,
      *   authenticationRoles = {
