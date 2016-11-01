@@ -34,6 +34,7 @@
     "symfony/security-http": "~3.0",
     "symfony/routing": "~3.0",
     "symfony/yaml": "~3.0",
+    "symfony/polyfill-php70": "~1.0",
     "tenside/core": "~1.0@dev"
   },
   "require-dev": {
