@@ -65,7 +65,7 @@ if (PHP_SAPI == 'cli') {
     require 'phar://tenside.phar/app/console';
 } else {
     // clean the shebang which might have been written by php-fcgi.
-    ob_clean();
+    @ob_clean();
     require 'phar://tenside.phar/web/app.php';
 }
 
