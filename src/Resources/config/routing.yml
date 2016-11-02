@@ -17,20 +17,6 @@ composer_json_put:
     options:
         required_role: ROLE_EDIT_COMPOSER_JSON
 
-app_kernel_get:
-    path:     /v1/AppKernel.php
-    defaults: { _controller: TensideCoreBundle:AppKernel:getAppKernel }
-    methods:  [GET]
-    options:
-        required_role: ROLE_EDIT_APP_KERNEL
-
-app_kernel_put:
-    path:     /v1/AppKernel.php
-    defaults: { _controller: TensideCoreBundle:AppKernel:putAppKernel }
-    methods:  [PUT]
-    options:
-        required_role: ROLE_EDIT_APP_KERNEL
-
 packages_get:
     path:     /v1/packages
     defaults: { _controller: TensideCoreBundle:Package:packageList }
