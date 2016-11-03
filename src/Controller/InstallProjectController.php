@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Tenside\Core\Composer\AuthJson;
 use Tenside\CoreBundle\Security\UserInformation;
 use Tenside\CoreBundle\Security\UserInformationInterface;
 use Tenside\Core\Task\Composer\InstallTask;
@@ -87,6 +88,11 @@ class InstallProjectController extends AbstractController
      *         "php_cli_arguments" = {
      *           "dataType" = "string",
      *           "description" = "Command line arguments to add."
+     *         },
+     *         "github_oauth_token" = {
+     *           "dataType" = "string",
+     *           "description" = "Github OAuth token.",
+     *           "required" = false
      *         }
      *       }
      *     }
@@ -516,6 +522,15 @@ class InstallProjectController extends AbstractController
 
         if (isset($configuration['php_can_fork'])) {
             $tensideConfig->setForkingAvailable($configuration['php_can_fork']);
+        }
+
+        if (isset($configuration['github_oauth_token'])) {
+            $composerAuth = new AuthJson(
+                $this->get('tenside.home')->tensideDataDir() . DIRECTORY_SEPARATOR . 'auth.json',
+                null
+            );
+
+            $composerAuth->setGithubOAuthToken($configuration['github_oauth_token']);
         }
     }
 }
