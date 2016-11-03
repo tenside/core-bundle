@@ -116,9 +116,7 @@ class InstallProjectController extends AbstractController
         $tensideConfig->set('secret', $secret);
 
         if ($inputData->has('configuration')) {
-            foreach ($inputData->get('configuration', true) as $key => $value) {
-                $tensideConfig->set($key, $value);
-            }
+            $this->handleConfiguration($inputData->get('configuration', true));
         }
         $user = $this->createUser($inputData->get('credentials/username'), $inputData->get('credentials/password'));
 
@@ -487,5 +485,37 @@ class InstallProjectController extends AbstractController
         $user = $this->get('tenside.user_provider')->addUser($user)->refreshUser($user);
 
         return $user;
+    }
+
+    /**
+     * Absorb the passed configuration.
+     *
+     * @param array $configuration The configuration to absorb.
+     *
+     * @return void
+     */
+    private function handleConfiguration($configuration)
+    {
+        $tensideConfig = $this->get('tenside.config');
+
+        if (isset($configuration['php_cli'])) {
+            $tensideConfig->setPhpCliBinary($configuration['php_cli']);
+        }
+
+        if (isset($configuration['php_cli_arguments'])) {
+            $tensideConfig->setPhpCliArguments($configuration['php_cli_arguments']);
+        }
+
+        if (isset($configuration['php_cli_environment'])) {
+            $tensideConfig->setPhpCliEnvironment($configuration['php_cli_environment']);
+        }
+
+        if (isset($configuration['php_force_background'])) {
+            $tensideConfig->setForceToBackground($configuration['php_force_background']);
+        }
+
+        if (isset($configuration['php_can_fork'])) {
+            $tensideConfig->setForkingAvailable($configuration['php_can_fork']);
+        }
     }
 }
