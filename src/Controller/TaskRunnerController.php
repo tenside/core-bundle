@@ -74,6 +74,10 @@ class TaskRunnerController extends AbstractController
      *         "created_at" = {
      *           "dataType" = "string",
      *           "description" = "The date the task was created in ISO 8601 format."
+     *         },
+     *         "user_data" = {
+     *           "dataType" = "object",
+     *           "description" = "The user submitted additional data."
      *         }
      *      }
      *   }
@@ -141,6 +145,10 @@ class TaskRunnerController extends AbstractController
      *           "dataType" = "string",
      *           "description" = "The date the task was created in ISO 8601 format."
      *         },
+     *         "user_data" = {
+     *           "dataType" = "object",
+     *           "description" = "The user submitted additional data."
+     *         },
      *         "output" = {
      *            "dataType" = "string",
      *            "description" = "The command line output of the task."
@@ -204,6 +212,10 @@ class TaskRunnerController extends AbstractController
      *         "type" = {
      *           "dataType" = "string",
      *           "description" = "The type of the task."
+     *         },
+     *         "user_data" = {
+     *           "dataType" = "object",
+     *           "description" = "The user submitted additional data."
      *         },
      *         "created_at" = {
      *           "dataType" = "string",
@@ -333,6 +345,10 @@ class TaskRunnerController extends AbstractController
      *         "created_at" = {
      *           "dataType" = "string",
      *           "description" = "The date the task was created in ISO 8601 format."
+     *         },
+     *         "user_data" = {
+     *           "dataType" = "object",
+     *           "description" = "The user submitted additional data."
      *         }
      *      }
      *   }
@@ -432,7 +448,8 @@ class TaskRunnerController extends AbstractController
             'id'         => $task->getId(),
             'status'     => $task->getStatus(),
             'type'       => $task->getType(),
-            'created_at' => $task->getCreatedAt()->format(\DateTime::ISO8601)
+            'created_at' => $task->getCreatedAt()->format(\DateTime::ISO8601),
+            'user_data'  => $task->getUserData()
         ];
 
         if (true === $addOutput) {
