@@ -120,19 +120,7 @@ class InstallProjectController extends AbstractController
                 $tensideConfig->set($key, $value);
             }
         }
-
-        // Add the user now.
-        $user = new UserInformation([
-            'username' => $inputData->get('credentials/username'),
-            'acl'      => UserInformationInterface::ROLE_ALL
-        ]);
-
-        $user->set(
-            'password',
-            $this->get('security.password_encoder')->encodePassword($user, $inputData->get('credentials/password'))
-        );
-
-        $user = $this->get('tenside.user_provider')->addUser($user)->refreshUser($user);
+        $user = $this->createUser($inputData->get('credentials/username'), $inputData->get('credentials/password'));
 
         return new JsonResponse(
             [
@@ -474,5 +462,30 @@ class InstallProjectController extends AbstractController
         if ($this->get('tenside.status')->isComplete()) {
             throw new NotAcceptableHttpException('Already installed in ' . $this->getTensideHome());
         }
+    }
+
+    /**
+     * Add an user to the database.
+     *
+     * @param string $username The username.
+     *
+     * @param string $password The password.
+     *
+     * @return UserInformation
+     */
+    private function createUser($username, $password)
+    {
+        $user = new UserInformation(
+            [
+                'username' => $username,
+                'acl'      => UserInformationInterface::ROLE_ALL
+            ]
+        );
+
+        $user->set('password', $this->get('security.password_encoder')->encodePassword($user, $password));
+
+        $user = $this->get('tenside.user_provider')->addUser($user)->refreshUser($user);
+
+        return $user;
     }
 }
