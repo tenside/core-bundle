@@ -410,6 +410,7 @@ class TaskRunnerController extends AbstractController
         );
 
         $this->get('logger')->debug('SPAWN CLI: ' . $commandline->getCommandLine());
+        $commandline->setTimeout(0);
         $commandline->start();
         if (!$commandline->isRunning()) {
             // We might end up here when the process has been forked.
@@ -430,6 +431,8 @@ class TaskRunnerController extends AbstractController
                 );
             }
         }
+
+        $commandline->wait();
     }
 
     /**
