@@ -36,7 +36,8 @@
     "symfony/yaml": "~3.0",
     "symfony/polyfill-php70": "~1.0",
     "tenside/core": "~1.0@dev",
-    "doctrine/annotations": "~1.3"
+    "doctrine/annotations": "~1.3",
+    "terminal42/background-process": "dev-master"
   },
   "require-dev": {
     "phpcq/all-tasks": "~1.1",

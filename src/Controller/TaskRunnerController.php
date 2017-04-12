@@ -32,6 +32,9 @@ use Tenside\Core\Util\PhpProcessSpawner;
 use Tenside\CoreBundle\Annotation\ApiDescription;
 use Tenside\Core\Task\Task;
 use Tenside\Core\Util\JsonArray;
+use Terminal42\BackgroundProcess\Forker\DisownForker;
+use Terminal42\BackgroundProcess\Forker\NohupForker;
+use Terminal42\BackgroundProcess\ProcessController;
 
 /**
  * Lists and executes queued tasks.
@@ -399,7 +402,19 @@ class TaskRunnerController extends AbstractController
     {
         $config      = $this->getTensideConfig();
         $home        = $this->getTensideHome();
-        $commandline = PhpProcessSpawner::create($config, $home)->spawn(
+
+        $backgroundTask = PhpProcessSpawner::create($config, $home)->spawn(
+            [
+                $this->get('tenside.cli_script')->cliExecutable(),
+                '-v',
+                '--no-interaction',
+                'background-task:run',
+            ]
+        );
+
+        $this->get('logger')->warning('Background CLI: ' . $backgroundTask->getCommandLine());
+
+        $tensideTask = PhpProcessSpawner::create($config, $home)->spawn(
             [
                 $this->get('tenside.cli_script')->cliExecutable(),
                 'tenside:runtask',
@@ -409,7 +424,20 @@ class TaskRunnerController extends AbstractController
             ]
         );
 
-        $this->get('logger')->debug('SPAWN CLI: ' . $commandline->getCommandLine());
+        $this->get('logger')->warning('Task CLI: ' . $tensideTask->getCommandLine());
+
+        $commandline = ProcessController::create(
+            $this->getTensideDataDir(),
+            $tensideTask->getCommandLine(),
+            $this->getTensideHome(),
+            $task->getId()
+        );
+
+        $commandline->setLogger($this->get('logger'));
+
+        $commandline->addForker(new NohupForker($backgroundTask->getCommandLine()));
+        $commandline->addForker(new DisownForker($backgroundTask->getCommandLine()));
+
         $commandline->setTimeout(0);
         $commandline->start();
         if (!$commandline->isRunning()) {
@@ -431,8 +459,6 @@ class TaskRunnerController extends AbstractController
                 );
             }
         }
-
-        $commandline->wait();
     }
 
     /**
