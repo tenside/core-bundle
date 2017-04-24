@@ -37,10 +37,6 @@ services:
         factory:        [Tenside\CoreBundle\DependencyInjection\Factory\TaskRunLockHandlerFactory, create]
         arguments:      ["@tenside.home"]
 
-    tenside.user_provider:
-        class:     Tenside\CoreBundle\Security\UserProviderFromConfig
-        arguments: ["@tenside.config"]
-
     tenside.exception_renderer:
         class:     Tenside\CoreBundle\EventListener\ExceptionListener
         arguments:
@@ -56,26 +52,6 @@ services:
         arguments: ["@tenside.home"]
         tags:
             - { name: tenside.taskfactory }
-
-    tenside.jwt_authenticator:
-        class:     Tenside\CoreBundle\Security\JWTAuthenticator
-        arguments: ["@tenside.config"]
-        public:    true
-        # cannot be shared as the install controller is manipulating the secret.
-        shared:    false
-
-    tenside.permission_voter:
-        class:     Tenside\CoreBundle\Security\PermissionVoter
-        arguments: ["@router", "@request_stack", { cache_dir: "%kernel.cache_dir%", debug: "%kernel.debug%" }]
-        tags:
-            - { name: security.voter }
-        public:    false
-
-    tenside.permission_voter.cache_warmer:
-        class:     Tenside\CoreBundle\CacheWarmer\VoterCacheWarmer
-        arguments: ["@tenside.permission_voter"]
-        tags:
-            - { name: kernel.cache_warmer }
 
     tenside.logger:
         class:          Monolog\Handler\RotatingFileHandler

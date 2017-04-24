@@ -22,8 +22,6 @@ namespace Tenside\CoreBundle\Test\Controller;
 
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Tenside\Core\Task\Composer\InstallTask;
 use Tenside\Core\Util\HomePathDeterminator;
 use Tenside\Core\Util\JsonArray;
@@ -82,33 +80,6 @@ class InstallProjectControllerTest extends TestCase
         $config = new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json'));
         $container->set('tenside.config', $config);
 
-        $encoder = $this
-            ->getMockBuilder(UserPasswordEncoderInterface::class)
-            ->setMethods(['encodePassword'])
-            ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
-        $encoder->method('encodePassword')->willReturnCallback(function () {
-            return 'encoded-' . func_get_arg(1);
-        });
-        $container->set('security.password_encoder', $encoder);
-
-        $userProvider = $this
-            ->getMockBuilder(UserProviderInterface::class)
-            ->setMethods(['addUser', 'refreshUser'])
-            ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
-        $userProvider->expects($this->once())->method('addUser')->willReturn($userProvider);
-        $userProvider->expects($this->once())->method('refreshUser')->willReturnArgument(0);
-        $container->set('tenside.user_provider', $userProvider);
-
-        $authenticator = $this
-            ->getMockBuilder('stdClass')
-            ->setMethods(['getTokenForData'])
-            ->getMock();
-        $authenticator->expects($this->once())->method('getTokenForData')->willReturn('token-value');
-
-        $container->set('tenside.jwt_authenticator', $authenticator);
-
         $controller = new InstallProjectController();
         $controller->setContainer($container);
 
@@ -164,33 +135,6 @@ class InstallProjectControllerTest extends TestCase
 
         $config = new TensideJsonConfig(new JsonFile($this->getTempDir() . DIRECTORY_SEPARATOR . 'tenside.json'));
         $container->set('tenside.config', $config);
-
-        $encoder = $this
-            ->getMockBuilder(UserPasswordEncoderInterface::class)
-            ->setMethods(['encodePassword'])
-            ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
-        $encoder->method('encodePassword')->willReturnCallback(function () {
-            return 'encoded-' . func_get_arg(1);
-        });
-        $container->set('security.password_encoder', $encoder);
-
-        $userProvider = $this
-            ->getMockBuilder(UserProviderInterface::class)
-            ->setMethods(['addUser', 'refreshUser'])
-            ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
-        $userProvider->expects($this->once())->method('addUser')->willReturn($userProvider);
-        $userProvider->expects($this->once())->method('refreshUser')->willReturnArgument(0);
-        $container->set('tenside.user_provider', $userProvider);
-
-        $authenticator = $this
-            ->getMockBuilder('stdClass')
-            ->setMethods(['getTokenForData'])
-            ->getMock();
-        $authenticator->expects($this->once())->method('getTokenForData')->willReturn('token-value');
-
-        $container->set('tenside.jwt_authenticator', $authenticator);
 
         $controller = new InstallProjectController();
         $controller->setContainer($container);

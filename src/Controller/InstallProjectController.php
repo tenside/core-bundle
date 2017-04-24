@@ -27,8 +27,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Tenside\Core\Composer\AuthJson;
-use Tenside\CoreBundle\Security\UserInformation;
-use Tenside\CoreBundle\Security\UserInformationInterface;
 use Tenside\Core\Task\Composer\InstallTask;
 use Tenside\Core\Util\JsonArray;
 use Tenside\CoreBundle\Annotation\ApiDescription;
@@ -107,9 +105,6 @@ class InstallProjectController extends AbstractController
      */
     public function configureAction(Request $request)
     {
-        if ($this->get('tenside.status')->isTensideConfigured()) {
-            throw new NotAcceptableHttpException('Already configured.');
-        }
         $inputData = new JsonArray($request->getContent());
 
         $secret = bin2hex(random_bytes(40));
@@ -124,12 +119,10 @@ class InstallProjectController extends AbstractController
         if ($inputData->has('configuration')) {
             $this->handleConfiguration($inputData->get('configuration', true));
         }
-        $user = $this->createUser($inputData->get('credentials/username'), $inputData->get('credentials/password'));
 
         return new JsonResponse(
             [
                 'status' => 'OK',
-                'token'  => $this->get('tenside.jwt_authenticator')->getTokenForData($user)
             ],
             JsonResponse::HTTP_CREATED
         );
@@ -466,31 +459,6 @@ class InstallProjectController extends AbstractController
         if ($this->get('tenside.status')->isComplete()) {
             throw new NotAcceptableHttpException('Already installed in ' . $this->getTensideHome());
         }
-    }
-
-    /**
-     * Add an user to the database.
-     *
-     * @param string $username The username.
-     *
-     * @param string $password The password.
-     *
-     * @return UserInformation
-     */
-    private function createUser($username, $password)
-    {
-        $user = new UserInformation(
-            [
-                'username' => $username,
-                'acl'      => UserInformationInterface::ROLE_ALL
-            ]
-        );
-
-        $user->set('password', $this->get('security.password_encoder')->encodePassword($user, $password));
-
-        $user = $this->get('tenside.user_provider')->addUser($user)->refreshUser($user);
-
-        return $user;
     }
 
     /**
