@@ -40,7 +40,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Tenside\Core\Composer\ComposerJson;
 use Tenside\Core\Tenside;
 use Tenside\Core\Util\RuntimeHelper;
-use Tenside\CoreBundle\Command\SelfUpdateCommand;
 
 /**
  * The console application that handles the commands.
@@ -173,9 +172,6 @@ class Application extends SymfonyApplication
 
         $this->inputOutput = new ConsoleIO($input, $output, $this->getHelperSet());
 
-
-        $this->isUpdateNeeded($input, $output);
-
         return parent::doRun($input, $output);
     }
 
@@ -185,9 +181,6 @@ class Application extends SymfonyApplication
     protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output)
     {
         if ($command instanceof \Composer\Command\BaseCommand) {
-            if (!$command instanceof SelfUpdateCommand) {
-                $command->setComposer(ComposerFactory::create($this->inputOutput));
-            }
             $command->setIO(new ConsoleIO($input, $output, $this->getHelperSet()));
         }
 
@@ -330,47 +323,6 @@ class Application extends SymfonyApplication
     public function getLongVersion()
     {
         return parent::getLongVersion() . ' ' . Tenside::RELEASE_DATE;
-    }
-
-    /**
-     * Check if updating is needed.
-     *
-     * @param InputInterface  $input  The input interface.
-     * @param OutputInterface $output The output interface.
-     *
-     * @return bool
-     *
-     * @SuppressWarnings(PHPMD.Superglobals)
-     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
-     */
-    protected function isUpdateNeeded(InputInterface $input, OutputInterface $output)
-    {
-        if ('@warning_time@' !== Tenside::WARNING_TIME) {
-            $commandName = '';
-            if ($name = $this->getCommandName($input)) {
-                try {
-                    $commandName = $this->find($name)->getName();
-                } catch (\InvalidArgumentException $e) {
-                    // Swallow the exception.
-                }
-            }
-            if ($commandName !== 'self-update' && $commandName !== 'selfupdate') {
-                if (time() > Tenside::WARNING_TIME) {
-                    $output->writeln(
-                        sprintf(
-                            '<warning>Warning: This development build is over 30 days old. ' .
-                            'It is recommended to update it by running "%s self-update" to get the latest version.' .
-                            '</warning>',
-                            $_SERVER['PHP_SELF']
-                        )
-                    );
-
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     /**
