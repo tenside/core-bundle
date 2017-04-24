@@ -435,8 +435,8 @@ class TaskRunnerController extends AbstractController
 
         $commandline->setLogger($this->get('logger'));
 
-        $commandline->addForker(new NohupForker($backgroundTask->getCommandLine()));
         $commandline->addForker(new DisownForker($backgroundTask->getCommandLine()));
+        $commandline->addForker(new NohupForker($backgroundTask->getCommandLine()));
 
         $commandline->setTimeout(0);
         $commandline->start();
