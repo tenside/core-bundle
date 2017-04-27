@@ -37,14 +37,6 @@ services:
         factory:        [Tenside\CoreBundle\DependencyInjection\Factory\TaskRunLockHandlerFactory, create]
         arguments:      ["@tenside.home"]
 
-    tenside.exception_renderer:
-        class:     Tenside\CoreBundle\EventListener\ExceptionListener
-        arguments:
-          logger:  "@logger"
-          debug: "%kernel.debug%"
-        tags:
-            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
-
     tenside.taskfactory:
         class:     Tenside\Core\Task\CompositeTaskFactory
     tenside.taskfactory.composer:
