@@ -28,13 +28,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Tenside\Core\Util\PhpProcessSpawner;
 use Tenside\CoreBundle\Annotation\ApiDescription;
 use Tenside\Core\Task\Task;
 use Tenside\Core\Util\JsonArray;
-use Terminal42\BackgroundProcess\Forker\DisownForker;
-use Terminal42\BackgroundProcess\Forker\NohupForker;
-use Terminal42\BackgroundProcess\ProcessController;
 
 /**
  * Lists and executes queued tasks.
@@ -400,46 +396,26 @@ class TaskRunnerController extends AbstractController
      */
     private function spawn(Task $task)
     {
-        $config      = $this->getTensideConfig();
-        $home        = $this->getTensideHome();
+        $commandline = $this
+            ->get('contao_manager.process.console_factory')
+            ->createManagerConsoleBackgroundProcess(
+                [
+                    'tenside:runtask',
+                    $task->getId(),
+                    '-v',
+                    '--no-interaction'
+                ],
+                $task->getId()
+            )
+        ;
 
-        $backgroundTask = PhpProcessSpawner::create($config, $home)->spawn(
-            [
-                $this->get('tenside.cli_script')->cliExecutable(),
-                '-v',
-                '--no-interaction',
-                'background-task:run',
-            ]
-        );
-
-        $this->get('logger')->warning('Background CLI: ' . $backgroundTask->getCommandLine());
-
-        $tensideTask = PhpProcessSpawner::create($config, $home)->spawn(
-            [
-                $this->get('tenside.cli_script')->cliExecutable(),
-                'tenside:runtask',
-                $task->getId(),
-                '-v',
-                '--no-interaction'
-            ]
-        );
-
-        $this->get('logger')->warning('Task CLI: ' . $tensideTask->getCommandLine());
-
-        $commandline = ProcessController::create(
-            $this->getTensideDataDir(),
-            $tensideTask->getCommandLine(),
-            $this->getTensideHome(),
-            $task->getId()
-        );
-
-        $commandline->setLogger($this->get('logger'));
-
-        $commandline->addForker(new DisownForker($backgroundTask->getCommandLine()));
-        $commandline->addForker(new NohupForker($backgroundTask->getCommandLine()));
+        $this->get('logger')->info('Task CLI: ' . $commandline->getCommandLine());
 
         $commandline->setTimeout(0);
         $commandline->start();
+
+        usleep(1000);
+
         if (!$commandline->isRunning()) {
             // We might end up here when the process has been forked.
             // If exit code is neither 0 nor null, we have a problem here.
