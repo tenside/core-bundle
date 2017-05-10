@@ -295,6 +295,7 @@ class TaskRunnerController extends AbstractController
 
         $task->removeAssets();
         $list->remove($task->getId());
+        $this->get('contao_manager.process.console_factory')->restoreBackgroundProcess($task->getId())->delete();
 
         return JsonResponse::create(
             [
