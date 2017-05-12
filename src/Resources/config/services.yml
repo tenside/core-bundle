@@ -1,3 +1,6 @@
+parameters:
+    tenside.script_name: console
+
 services:
     tenside.home:
         class:  Tenside\Core\Util\HomePathDeterminator
