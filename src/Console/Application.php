@@ -113,7 +113,7 @@ class Application extends SymfonyApplication
             )
         );
 
-        if (!\Phar::running()) {
+        if (!\Phar::running(false)) {
             $definition->addOption(
                 new InputOption(
                     '--env',
